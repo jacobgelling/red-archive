@@ -6,12 +6,12 @@ Binaries for Windows and Linux are available in [GitHub Releases](https://github
 
 To unpack a given archive `DIRT1.ENV` to folder `DIRT1`, simply type:
 ```console
-$ red-archive -u "DIRT1.ENV" "DIRT1"
+$ red-archive -u DIRT1.ENV DIRT1
 ```
 
 To pack a given folder `DIRT1` into archive `DIRT1.ENV`, simply type:
 ```console
-$ red-archive -p "DIRT1" "DIRT1.ENV"
+$ red-archive -p DIRT1 DIRT1.ENV
 ```
 
 ## Format

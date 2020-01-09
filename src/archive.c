@@ -19,11 +19,18 @@ void make_folder(const char *folder_path)  {
 int unpack(const char *archive_path, const char *folder_path) {
     // Open archive
     FILE *archive_pointer = NULL;
-    int archive_open = fopen_s(&archive_pointer, archive_path, "rb");
-    if (archive_open) {
-        fclose(archive_pointer);
-        return archive_open;
-    }
+    #ifdef _WIN32
+        int archive_open = fopen_s(&archive_pointer, archive_path, "rb");
+        if (archive_open) {
+            fclose(archive_pointer);
+            return archive_open;
+        }
+    #else
+        if ((archive_pointer = fopen(archive_path, "rb")) == NULL) {
+            fclose(archive_pointer);
+            return 1;
+        }
+    #endif
 
     // Create folder
     make_folder(folder_path);
@@ -93,9 +100,15 @@ int unpack(const char *archive_path, const char *folder_path) {
         // Create file path
         const int filename_size = strlen(filename) + strlen(folder_path) + 2;
         char *file_path = malloc(filename_size);
-        strcpy_s(file_path, filename_size, folder_path);
-        strcat_s(file_path, filename_size, "/");
-        strcat_s(file_path, filename_size, filename);
+        #ifdef _WIN32
+            strcpy_s(file_path, filename_size, folder_path);
+            strcat_s(file_path, filename_size, "/");
+            strcat_s(file_path, filename_size, filename);
+        #else
+            strcpy(file_path, folder_path);
+            strcat(file_path, "/");
+            strcat(file_path, filename);
+        #endif
 
         // Extract the file
         if (compression_level == 0) {
@@ -105,7 +118,18 @@ int unpack(const char *archive_path, const char *folder_path) {
 
             // Copy from memory to file
             FILE *file_pointer = NULL;
-            fopen_s(&file_pointer, file_path, "wb");
+            #ifdef _WIN32
+                int file_open = fopen_s(&file_pointer, file_path, "wb");
+                if (file_open) {
+                    fclose(file_pointer);
+                    return file_open;
+                }
+            #else
+                if ((file_pointer = fopen(file_path, "wb")) == NULL) {
+                    fclose(file_pointer);
+                    return 1;
+                }
+            #endif
             fwrite(compressed_data, compressed_size, 1, file_pointer);
             fclose(file_pointer);
 
@@ -144,7 +168,18 @@ int unpack(const char *archive_path, const char *folder_path) {
 
             // Copy from memory to file
             FILE *file_pointer = NULL;
-            fopen_s(&file_pointer, file_path, "wb");
+            #ifdef _WIN32
+                int file_open = fopen_s(&file_pointer, file_path, "wb");
+                if (file_open) {
+                    fclose(file_pointer);
+                    return file_open;
+                }
+            #else
+                if ((file_pointer = fopen(file_path, "wb")) == NULL) {
+                    fclose(file_pointer);
+                    return 1;
+                }
+            #endif
             fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
             fclose(file_pointer);
 
@@ -285,7 +320,18 @@ int unpack(const char *archive_path, const char *folder_path) {
 
             // Copy from memory to file
             FILE *file_pointer = NULL;
-            fopen_s(&file_pointer, file_path, "wb");
+            #ifdef _WIN32
+                int file_open = fopen_s(&file_pointer, file_path, "wb");
+                if (file_open) {
+                    fclose(file_pointer);
+                    return file_open;
+                }
+            #else
+                if ((file_pointer = fopen(file_path, "wb")) == NULL) {
+                    fclose(file_pointer);
+                    return 1;
+                }
+            #endif
             fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
             fclose(file_pointer);
 
@@ -324,7 +370,18 @@ int pack(const char *folder_path, const char *archive_path) {
 
     // Open archive
     FILE *archive_pointer = NULL;
-    fopen_s(&archive_pointer, archive_path, "wb");
+    #ifdef _WIN32
+        int archive_open = fopen_s(&archive_pointer, archive_path, "wb");
+        if (archive_open) {
+            fclose(archive_pointer);
+            return archive_open;
+        }
+    #else
+        if ((archive_pointer = fopen(archive_path, "wb")) == NULL) {
+            fclose(archive_pointer);
+            return 1;
+        }
+    #endif
 
     // For each file in folder
     struct dirent* file_entry;
@@ -337,13 +394,30 @@ int pack(const char *folder_path, const char *archive_path) {
         // Create file path
         const int filename_size = strlen(file_entry->d_name) + strlen(folder_path) + 2;
         char *file_path = malloc(filename_size);
-        strcpy_s(file_path, filename_size, folder_path);
-        strcat_s(file_path, filename_size, "/");
-        strcat_s(file_path, filename_size, file_entry->d_name);
+        #ifdef _WIN32
+            strcpy_s(file_path, filename_size, folder_path);
+            strcat_s(file_path, filename_size, "/");
+            strcat_s(file_path, filename_size, file_entry->d_name);
+        #else
+            strcpy(file_path, folder_path);
+            strcat(file_path, "/");
+            strcat(file_path, file_entry->d_name);
+        #endif
 
         // Read file data
         FILE *file_pointer = NULL;
-        fopen_s(&file_pointer, file_path, "rb");
+        #ifdef _WIN32
+            int file_open = fopen_s(&file_pointer, file_path, "wb");
+            if (file_open) {
+                fclose(file_pointer);
+                return file_open;
+            }
+        #else
+            if ((file_pointer = fopen(file_path, "wb")) == NULL) {
+                fclose(file_pointer);
+                return 1;
+            }
+        #endif
         fseek(file_pointer, 0, SEEK_END);
         unsigned int file_size = ftell(file_pointer);
         fseek(file_pointer, 0, SEEK_SET);
@@ -361,7 +435,11 @@ int pack(const char *folder_path, const char *archive_path) {
         // Create metadata
         const int metadata_size = strlen(file_entry->d_name) + 10;
         char *metadata = malloc(metadata_size);
-        strcpy_s(metadata, metadata_size, file_entry->d_name);
+        #ifdef _WIN32
+            strcpy_s(metadata, metadata_size, file_entry->d_name);
+        #else
+            strcpy(metadata, file_entry->d_name);
+        #endif
         memcpy(&metadata[metadata_size - 9], &file_size_bytes, 4);
         memcpy(&metadata[metadata_size - 5], &file_size_bytes, 4);
         metadata[metadata_size - 1] = '\0';

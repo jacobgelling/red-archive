@@ -2,7 +2,7 @@
 Program to handle archives from the 1995 title Big Red Racing.
 
 ## Usage
-Binaries for Windows and Debian are available in [GitHub Releases](https://github.com/jacobgelling/red-archive/releases).
+Binaries for Windows and Linux are available in [GitHub Releases](https://github.com/jacobgelling/red-archive/releases).
 
 To unpack a given archive `DIRT1.ENV` to folder `DIRT1`, simply type:
 ```console

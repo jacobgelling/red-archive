@@ -4,16 +4,17 @@
  * Copyright (c) 2020 Jacob Gelling
  */
 
-#ifndef ARCHIVE_H
-#define ARCHIVE_H
+#ifndef REDARCHIVE_ARCHIVE_H
+#define REDARCHIVE_ARCHIVE_H
 
 #ifdef _WIN32
     #include <direct.h>
-    #include "../include/dirent.h"
+    #include "dirent.h"
 #else
     #include <sys/stat.h>
     #include <dirent.h>
 #endif
+
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>

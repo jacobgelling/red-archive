@@ -4,11 +4,12 @@
  * Copyright (c) 2020 Jacob Gelling
  */
 
-#ifndef CLI_H
-#define CLI_H
+#ifndef REDARCHIVE_CLI_H
+#define REDARCHIVE_CLI_H
 
 #include <stdio.h>
 #include <string.h>
+#include "version.h"
 #include "archive.h"
 
 int main(int argc, char *argv[]);

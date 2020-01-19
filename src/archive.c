@@ -39,11 +39,11 @@ int unpack(const char *archive_path, const char *folder_path) {
     // Unpack all files
     while (1) {
         // Get position in file
-        long int position = ftell(archive_pointer);
+        size_t position = ftell(archive_pointer);
 
         // Read filename
         char filename_buffer[FILENAME_SIZE];
-        int filename_status = fread(filename_buffer, 1, FILENAME_SIZE, archive_pointer);
+        size_t filename_status = fread(filename_buffer, 1, FILENAME_SIZE, archive_pointer);
         if (filename_status == 1) {
             break;
         } else if (filename_status < 1) {
@@ -68,7 +68,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         printf("%s\n", filename);
 
         // Seek to end of filename
-        int seek = fseek(archive_pointer, position + strlen(filename) + 1, SEEK_SET);
+        size_t seek = fseek(archive_pointer, position + strlen(filename) + 1, SEEK_SET);
 
         // Read compressed size
         unsigned int compressed_size;
@@ -99,7 +99,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         fread(compressed_data, compressed_size, 1, archive_pointer);
 
         // Create file path
-        const int filename_size = strlen(filename) + strlen(folder_path) + 2;
+        const size_t filename_size = strlen(filename) + strlen(folder_path) + 2;
         char *file_path = malloc(filename_size);
         #ifdef _WIN32
             strcpy_s(file_path, filename_size, folder_path);
@@ -208,13 +208,13 @@ int unpack(const char *archive_path, const char *folder_path) {
             unsigned int uncompressed_pointer = 0;
 
             // Create sliding window
-            char sliding_window [max_offset];
+            char *sliding_window = malloc(max_offset);
             int sliding_offset = 0;
 
             while (compressed_pointer < compressed_size) {
 
                 // Get flag
-                char flag = compressed_data[compressed_pointer];
+                const char flag = compressed_data[compressed_pointer];
                 compressed_pointer++;
 
                 for (unsigned char bit = 0; bit < 8; bit++) {
@@ -248,7 +248,7 @@ int unpack(const char *archive_path, const char *folder_path) {
                             count++;
                         }
                         compressed_pointer++;
-                        int run_length = 2;
+                        unsigned int run_length = 2;
                         for (unsigned char i = 0; i < 8; i++) {
                             if ( i == offset_bits ) {
                                 count = 0;
@@ -277,7 +277,7 @@ int unpack(const char *archive_path, const char *folder_path) {
                         }
 
                         // For each byte in run length
-                        for (int i = 0; i < run_length; i++) {
+                        for (unsigned int i = 0; i < run_length; i++) {
 
                             // Check offset is valid
                             if (offset > max_offset || offset >= uncompressed_pointer) {
@@ -313,6 +313,8 @@ int unpack(const char *archive_path, const char *folder_path) {
                     }
                 }
             }
+
+            free(sliding_window);
 
             // Check file matches expected size
             ESCAPE_LOOP:if (uncompressed_pointer != uncompressed_size || compressed_pointer != compressed_size) {
@@ -455,7 +457,7 @@ int pack(const char *folder_path, const char *archive_path) {
     }
 
     // Close archive and folder
-    char eof_byte[1] = {'\0'};
+    const char eof_byte[1] = {'\0'};
     fwrite(eof_byte, 1, 1, archive_pointer);
     fclose(archive_pointer);
     closedir(folder_pointer);

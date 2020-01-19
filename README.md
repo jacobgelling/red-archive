@@ -14,6 +14,21 @@ To pack a given folder `DIRT1` into archive `DIRT1.ENV`, execute the following.
 red-archive -p DIRT1 DIRT1.ENV
 ```
 
+## Compilation
+Compilation requires a C compiler and CMake.
+
+To generate the build files, execute the following from the root project folder.
+```console
+cmake . -B build
+```
+
+To build the project, execute the following from the root project folder.
+```console
+cmake --build build
+```
+
+You can find the output binaries in the `bin` folder.
+
 ## Format
 The Big Red Racing archive format and compression methods are unidentified and therefore undocumented other than what's written here.
 

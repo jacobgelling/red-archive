@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
 
     // Handle argumants
     if (argc == 1) {
-        printf("Red Archive\n");
+        printf("Red Archive %d.%d\n", REDARCHIVE_VERSION_MAJOR, REDARCHIVE_VERSION_MINOR);
         printf("MIT License\n");
         printf("Copyright (c) 2020 Jacob Gelling\n\n");
         printf("  To unpack an archive into a folder:\n");

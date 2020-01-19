@@ -2,16 +2,16 @@
 Program to handle archives from the 1995 title Big Red Racing.
 
 ## Usage
-Binaries for Windows and Linux are available in [GitHub Releases](https://github.com/jacobgelling/red-archive/releases/latest).
+The latest binaries for Windows and Debian are available at [GitHub Releases](https://github.com/jacobgelling/red-archive/releases/latest).
 
-To unpack a given archive `DIRT1.ENV` to folder `DIRT1`, simply type:
+To unpack a given archive `DIRT1.ENV` to folder `DIRT1`, execute the following.
 ```console
-$ red-archive -u DIRT1.ENV DIRT1
+red-archive -u DIRT1.ENV DIRT1
 ```
 
-To pack a given folder `DIRT1` into archive `DIRT1.ENV`, simply type:
+To pack a given folder `DIRT1` into archive `DIRT1.ENV`, execute the following.
 ```console
-$ red-archive -p DIRT1 DIRT1.ENV
+red-archive -p DIRT1 DIRT1.ENV
 ```
 
 ## Format

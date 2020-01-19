@@ -19,9 +19,9 @@ int main(int argc, char *argv[]) {
         printf("  To pack a folder into an archive:\n");
         printf("  %s -p [folder] [archive]\n", argv[0]);
     } else if (argc == 4) {
-        if (strcmp(argv[1], "-u") == 0) {
+        if (strcmp(argv[1], "-u") == 0 || strcmp(argv[1], "--unpack") == 0) {
             return_code = unpack(argv[2], argv[3]);
-        } else if (strcmp(argv[1], "-p") == 0) {
+        } else if (strcmp(argv[1], "-p") == 0 || strcmp(argv[1], "--pack") == 0) {
             return_code = pack(argv[2], argv[3]);
         } else {
             return_code = 1;

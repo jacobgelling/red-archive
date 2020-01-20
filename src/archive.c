@@ -235,8 +235,9 @@ int unpack(const char *archive_path, const char *folder_path) {
             char *sliding_window = malloc(max_offset);
             int sliding_offset = 0;
 
+            // While there is still compressed data to read
             while (compressed_pointer < compressed_size) {
-                // Get flag
+                // Read flag byte
                 const char flag = compressed_data[compressed_pointer];
                 compressed_pointer++;
 
@@ -337,7 +338,9 @@ int unpack(const char *archive_path, const char *folder_path) {
                 }
             }
 
+            // Free sliding window and compressed data from memory
             free(sliding_window);
+            free(compressed_data);
 
             // Check file matches expected size
             ESCAPE_LOOP:if (uncompressed_pointer != uncompressed_size || compressed_pointer != compressed_size) {
@@ -345,12 +348,12 @@ int unpack(const char *archive_path, const char *folder_path) {
             }
 
             // Open file
-            FILE *file_pointer = NULL;
-            if ((file_pointer = fopen(file_path, "wb")) == NULL) {
+            FILE *file_pointer = fopen(file_path, "wb");
+            free(file_path);
+            if (file_pointer == NULL) {
                 fprintf(stderr, "Error opening file %s\n", file_path);
                 return EXIT_FAILURE;
             }
-            free(file_path);
 
             // Copy from memory to file
             fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
@@ -365,7 +368,6 @@ int unpack(const char *archive_path, const char *folder_path) {
         }
 
         // Free file path and compressed data from memory
-        free(compressed_data);
 
         // Seek to next file positon
         seek = fseek(archive_pointer, position + compressed_size, SEEK_SET);

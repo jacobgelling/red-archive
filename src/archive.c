@@ -9,7 +9,7 @@
 // Set filename size to 13 (length of 8.3 filename with null-terminator)
 #define FILENAME_SIZE 13
 
-void make_folder(const char *folder_path)  {
+static void make_folder(const char *folder_path)  {
     #ifdef _WIN32
         _mkdir(folder_path);
     #else

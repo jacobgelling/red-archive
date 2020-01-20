@@ -38,18 +38,10 @@ static bool valid_filename_character(const char character) {
 int unpack(const char *archive_path, const char *folder_path) {
     // Open archive
     FILE *archive_pointer = NULL;
-    #ifdef _WIN32
-        int archive_open = fopen_s(&archive_pointer, archive_path, "rb");
-        if (archive_open) {
-            fclose(archive_pointer);
-            return archive_open;
-        }
-    #else
-        if ((archive_pointer = fopen(archive_path, "rb")) == NULL) {
-            fclose(archive_pointer);
-            return 1;
-        }
-    #endif
+    if ((archive_pointer = fopen(archive_path, "rb")) == NULL) {
+        fprintf(stderr, "Error opening archive %s\n", archive_path);
+        return EXIT_FAILURE;
+    }
 
     // Create folder
     make_folder(folder_path);
@@ -145,20 +137,14 @@ int unpack(const char *archive_path, const char *folder_path) {
                 printf("'%s' does not match expected size\n", filename);
             }
 
-            // Copy from memory to file
+            // Open file
             FILE *file_pointer = NULL;
-            #ifdef _WIN32
-                int file_open = fopen_s(&file_pointer, file_path, "wb");
-                if (file_open) {
-                    fclose(file_pointer);
-                    return file_open;
-                }
-            #else
-                if ((file_pointer = fopen(file_path, "wb")) == NULL) {
-                    fclose(file_pointer);
-                    return EXIT_FAILURE;
-                }
-            #endif
+            if ((file_pointer = fopen(file_path, "wb")) == NULL) {
+                fprintf(stderr, "Error opening file %s\n", file_path);
+                return EXIT_FAILURE;
+            }
+
+            // Copy from memory to file
             fwrite(compressed_data, compressed_size, 1, file_pointer);
             fclose(file_pointer);
 
@@ -195,20 +181,14 @@ int unpack(const char *archive_path, const char *folder_path) {
                 printf("'%s' does not match expected size\n", filename);
             }
 
-            // Copy from memory to file
+            // Open file
             FILE *file_pointer = NULL;
-            #ifdef _WIN32
-                int file_open = fopen_s(&file_pointer, file_path, "wb");
-                if (file_open) {
-                    fclose(file_pointer);
-                    return file_open;
-                }
-            #else
-                if ((file_pointer = fopen(file_path, "wb")) == NULL) {
-                    fclose(file_pointer);
-                    return EXIT_FAILURE;
-                }
-            #endif
+            if ((file_pointer = fopen(file_path, "wb")) == NULL) {
+                fprintf(stderr, "Error opening file %s\n", file_path);
+                return EXIT_FAILURE;
+            }
+
+            // Copy from memory to file
             fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
             fclose(file_pointer);
 
@@ -349,20 +329,14 @@ int unpack(const char *archive_path, const char *folder_path) {
                 printf("'%s' does not match expected size\n", filename);
             }
 
-            // Copy from memory to file
+            // Open file
             FILE *file_pointer = NULL;
-            #ifdef _WIN32
-                int file_open = fopen_s(&file_pointer, file_path, "wb");
-                if (file_open) {
-                    fclose(file_pointer);
-                    return file_open;
-                }
-            #else
-                if ((file_pointer = fopen(file_path, "wb")) == NULL) {
-                    fclose(file_pointer);
-                    return EXIT_FAILURE;
-                }
-            #endif
+            if ((file_pointer = fopen(file_path, "wb")) == NULL) {
+                fprintf(stderr, "Error opening file %s\n", file_path);
+                return EXIT_FAILURE;
+            }
+
+            // Copy from memory to file
             fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
             fclose(file_pointer);
 
@@ -401,18 +375,10 @@ int pack(const char *folder_path, const char *archive_path) {
 
     // Open archive
     FILE *archive_pointer = NULL;
-    #ifdef _WIN32
-        int archive_open = fopen_s(&archive_pointer, archive_path, "wb");
-        if (archive_open) {
-            fclose(archive_pointer);
-            return archive_open;
-        }
-    #else
-        if ((archive_pointer = fopen(archive_path, "wb")) == NULL) {
-            fclose(archive_pointer);
-            return EXIT_FAILURE;
-        }
-    #endif
+    if ((archive_pointer = fopen(archive_path, "wb")) == NULL) {
+        fprintf(stderr, "Error opening archive %s\n", archive_path);
+        return EXIT_FAILURE;
+    }
 
     // For each file in folder
     struct dirent* file_entry;
@@ -435,20 +401,14 @@ int pack(const char *folder_path, const char *archive_path) {
             strcat(file_path, file_entry->d_name);
         #endif
 
-        // Read file data
+        // Open file
         FILE *file_pointer = NULL;
-        #ifdef _WIN32
-            int file_open = fopen_s(&file_pointer, file_path, "wb");
-            if (file_open) {
-                fclose(file_pointer);
-                return file_open;
-            }
-        #else
-            if ((file_pointer = fopen(file_path, "wb")) == NULL) {
-                fclose(file_pointer);
-                return EXIT_FAILURE;
-            }
-        #endif
+        if ((file_pointer = fopen(file_path, "rb")) == NULL) {
+            fprintf(stderr, "Error opening file %s\n", file_path);
+            return EXIT_FAILURE;
+        }
+
+        // Read file data
         fseek(file_pointer, 0, SEEK_END);
         unsigned int file_size = ftell(file_pointer);
         fseek(file_pointer, 0, SEEK_SET);

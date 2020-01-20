@@ -151,6 +151,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             // Write uncompressed data to file
             fwrite(compressed_data, compressed_size, 1, file_pointer);
             fclose(file_pointer);
+            free(compressed_data);
 
         } else if (compression_level == 1) {
             // Perform type 1 decompression
@@ -181,6 +182,9 @@ int unpack(const char *archive_path, const char *folder_path) {
                     }
                 }
             }
+
+            // Free compressed data from memory
+            free(compressed_data);
 
             // Print warning if output size does not match expected size
             if (uncompressed_pointer != uncompressed_size) {

@@ -440,11 +440,15 @@ int pack(const char *folder_path, const char *archive_path) {
         free(file_data);
     }
 
-    // Close archive and folder
+    // Close folder
+    closedir(folder_pointer);
+
+    // Write end of file byte to file
     const char eof_byte[1] = {'\0'};
     fwrite(eof_byte, 1, 1, archive_pointer);
+
+    // Close archive
     fclose(archive_pointer);
-    closedir(folder_pointer);
 
     // Reached end, success
     return 0;

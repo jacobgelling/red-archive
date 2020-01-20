@@ -161,13 +161,13 @@ int unpack(const char *archive_path, const char *folder_path) {
             // While there is still compressed data to read
             while (compressed_pointer < compressed_size) {
                 // Read flag byte
-                unsigned char flag = compressed_data[compressed_pointer];
+                const unsigned char flag = compressed_data[compressed_pointer];
                 compressed_pointer++;
 
                 // Next byte is duplicated x times
                 if (flag > 127) {
                     // Calculate times to duplicate
-                    unsigned char count = flag - 125;
+                    const unsigned char count = flag - 125;
 
                     // Duplicate byte and write to uncompressed data buffer
                     for (unsigned char i = 0; i < count; i++, uncompressed_pointer++) {

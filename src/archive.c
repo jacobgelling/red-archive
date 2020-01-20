@@ -431,12 +431,12 @@ int pack(const char *folder_path, const char *archive_path) {
         memcpy(&metadata[metadata_size - 5], &file_size_bytes, 4);
         metadata[metadata_size - 1] = '\0';
 
-        // Copy from memory to file
+        // Write metadata to file
         fwrite(metadata, metadata_size, 1, archive_pointer);
-        fwrite(file_data, file_size, 1, archive_pointer);
-
-        // Free memory
         free(metadata);
+
+        // Write file data to file
+        fwrite(file_data, file_size, 1, archive_pointer);
         free(file_data);
     }
 

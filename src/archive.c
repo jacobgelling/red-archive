@@ -94,7 +94,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         unsigned int compressed_size;
         if (fread(&compressed_size, 4, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
-            fprintf(stderr, "Could not read compressed size in archive %s\n", archive_path);
+            fprintf(stderr, "Could not read compressed size\n");
             return EXIT_FAILURE;
         }
 
@@ -102,7 +102,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         unsigned int uncompressed_size;
         if (fread(&uncompressed_size, 4, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
-            fprintf(stderr, "Could not read uncompressed size in archive %s\n", archive_path);
+            fprintf(stderr, "Could not read uncompressed size\n");
             return EXIT_FAILURE;
         }
 
@@ -110,7 +110,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         char compression_level;
         if (fread(&compression_level, 1, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
-            fprintf(stderr, "Could not read compression level in archive %s\n", archive_path);
+            fprintf(stderr, "Could not read compression level\n");
             return EXIT_FAILURE;
         }
 
@@ -121,7 +121,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         char *compressed_data = malloc(compressed_size);
         if (fread(compressed_data, compressed_size, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
-            fprintf(stderr, "Could not read file data in archive %s\n", archive_path);
+            fprintf(stderr, "Could not read file data\n");
             return EXIT_FAILURE;
         }
 
@@ -134,18 +134,21 @@ int unpack(const char *archive_path, const char *folder_path) {
 
         // Extract the file
         if (compression_level == 0) {
+            // Print warning if compressed size does not match uncompressed size
             if (compressed_size != uncompressed_size) {
-                printf("'%s' does not match expected size\n", filename);
+                fprintf(stderr, "Compressed size does not match uncompressed size\n");
             }
 
             // Open file
-            FILE *file_pointer = NULL;
-            if ((file_pointer = fopen(file_path, "wb")) == NULL) {
+            FILE *file_pointer = fopen(file_path, "wb");
+            free(file_path);
+            if (file_pointer == NULL) {
+                fclose(archive_pointer);
                 fprintf(stderr, "Error opening file %s\n", file_path);
                 return EXIT_FAILURE;
             }
 
-            // Copy from memory to file
+            // Write uncompressed data to file
             fwrite(compressed_data, compressed_size, 1, file_pointer);
             fclose(file_pointer);
 

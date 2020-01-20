@@ -383,23 +383,17 @@ int pack(const char *folder_path, const char *archive_path) {
     // For each file in folder
     struct dirent* file_entry;
     while ((file_entry = readdir(folder_pointer))) {
-        // Skip . and .. files
-        if (!strcmp (file_entry->d_name, ".") || !strcmp (file_entry->d_name, "..")) {
+        // Skip . and .. mappings
+        if (!strcmp(file_entry->d_name, ".") || !strcmp(file_entry->d_name, "..")) {
             continue;
         }
 
         // Create file path
         const int filename_size = strlen(file_entry->d_name) + strlen(folder_path) + 2;
         char *file_path = malloc(filename_size);
-        #ifdef _WIN32
-            strcpy_s(file_path, filename_size, folder_path);
-            strcat_s(file_path, filename_size, "/");
-            strcat_s(file_path, filename_size, file_entry->d_name);
-        #else
-            strcpy(file_path, folder_path);
-            strcat(file_path, "/");
-            strcat(file_path, file_entry->d_name);
-        #endif
+        strcpy(file_path, folder_path);
+        strcat(file_path, "/");
+        strcat(file_path, file_entry->d_name);
 
         // Open file
         FILE *file_pointer = NULL;
@@ -407,11 +401,14 @@ int pack(const char *folder_path, const char *archive_path) {
             fprintf(stderr, "Error opening file %s\n", file_path);
             return EXIT_FAILURE;
         }
+        free(file_path);
+
+        // Get file size
+        fseek(file_pointer, 0, SEEK_END);
+        size_t file_size = ftell(file_pointer);
+        fseek(file_pointer, 0, SEEK_SET);
 
         // Read file data
-        fseek(file_pointer, 0, SEEK_END);
-        unsigned int file_size = ftell(file_pointer);
-        fseek(file_pointer, 0, SEEK_SET);
         char *file_data = malloc(file_size);
         fread(file_data, file_size, 1, file_pointer);
         fclose(file_pointer);
@@ -426,11 +423,7 @@ int pack(const char *folder_path, const char *archive_path) {
         // Create metadata
         const int metadata_size = strlen(file_entry->d_name) + 10;
         char *metadata = malloc(metadata_size);
-        #ifdef _WIN32
-            strcpy_s(metadata, metadata_size, file_entry->d_name);
-        #else
-            strcpy(metadata, file_entry->d_name);
-        #endif
+        strcpy(metadata, file_entry->d_name);
         memcpy(&metadata[metadata_size - 9], &file_size_bytes, 4);
         memcpy(&metadata[metadata_size - 5], &file_size_bytes, 4);
         metadata[metadata_size - 1] = '\0';

@@ -375,9 +375,9 @@ int unpack(const char *archive_path, const char *folder_path) {
         }
     }
 
-    // Reached end, success
+    // Close archive and return success code
     fclose(archive_pointer);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 int pack(const char *folder_path, const char *archive_path) {

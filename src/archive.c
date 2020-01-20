@@ -17,6 +17,24 @@ static void make_folder(const char *folder_path)  {
     #endif
 }
 
+static bool valid_filename_character(const char character) {
+    // Check if a valid MS-DOS filename character
+    if (
+        (character >= 36 && character <= 41)  || // !-)
+        (character >= 48 && character <= 57)  || // 0-9
+        (character >= 64 && character <= 90)  || // @-Z
+        (character >= 94 && character <= 123) || // ^-{
+        character == 33  || // !
+        character == 45  || // -
+        character == 46  || // .
+        character == 125 || // }
+        character == 126    // ~
+    ) {
+        return true;
+    }
+    return false;
+}
+
 int unpack(const char *archive_path, const char *folder_path) {
     // Open archive
     FILE *archive_pointer = NULL;
@@ -43,29 +61,39 @@ int unpack(const char *archive_path, const char *folder_path) {
 
         // Read filename
         char filename_buffer[FILENAME_SIZE];
-        size_t filename_status = fread(filename_buffer, 1, FILENAME_SIZE, archive_pointer);
-        if (filename_status == 1) {
-            break;
-        } else if (filename_status < 1) {
+        const size_t filename_read = fread(filename_buffer, 1, FILENAME_SIZE, archive_pointer);
+
+        // Fail if no filename read
+        if (filename_read == 0) {
             fclose(archive_pointer);
-            return 1;
+            fprintf(stderr, "Could not read filename in archive %s\n", archive_path);
+            return EXIT_FAILURE;
         }
 
-        // Ensure filename is printable and null-terminated
-        for (int i = 0; i <= FILENAME_SIZE; i++) {
-            // If null-terminator found
-            if (i > 0 && filename_buffer[i] == '\0') {
+        // Finish unpacking if end of file byte found
+        if (filename_read == 1 && filename_buffer[0] == '\0') {
+            break;
+        }
+
+        // Ensure filename is valid
+        const size_t filename_last_i = filename_read - 1;
+        for (int i = 0; i < filename_read; i++) {
+            // Break if null-terminator found
+            if (i > 0 & filename_buffer[i] == 0) {
                 break;
-            // If character not printable
-            } else if (!isprint(filename_buffer[i])) {
+            // Fail if invalid character found or string is unterminated
+            } else if (!valid_filename_character(filename_buffer[i]) || (i == filename_last_i && filename_buffer[i] != 0)) {
                 fclose(archive_pointer);
-                return 1;
+                fprintf(stderr, "Invalid filename in archive %s\n", archive_path);
+                return EXIT_FAILURE;
             }
         }
 
-        // Create filename string
-        char *filename = &filename_buffer[0];
-        printf("%s\n", filename);
+        // Create filename string from buffer
+        const char *filename = &filename_buffer[0];
+
+        // Print current filename
+        printf("Extracting %s from %s...\n", filename, archive_path);
 
         // Seek to end of filename
         size_t seek = fseek(archive_pointer, position + strlen(filename) + 1, SEEK_SET);

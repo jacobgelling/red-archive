@@ -19,6 +19,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h> 
 
 int unpack(const char *archive_path, const char *folder_path);
 int pack(const char *folder_path, const char *archive_path);

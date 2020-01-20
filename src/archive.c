@@ -6,7 +6,7 @@
 
 #include "archive.h"
 
-// Set filename size to 13 (length of 8.3 filename with null-terminator)
+// Set filename size to length of 8.3 filename with null-terminator
 #define FILENAME_SIZE 13
 
 static inline void make_folder(const char *folder_path)  {
@@ -102,21 +102,21 @@ int unpack(const char *archive_path, const char *folder_path) {
         unsigned int compressed_size;
         if (fread(&compressed_size, 4, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
-            return 1;
+            return EXIT_FAILURE;
         }
 
         // Read uncompressed size
         unsigned int uncompressed_size;
         if (fread(&uncompressed_size, 4, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
-            return 1;
+            return EXIT_FAILURE;
         }
 
         // Read compression level
         char compression_level;
         if (fread(&compression_level, 1, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
-            return 1;
+            return EXIT_FAILURE;
         }
 
         // Get position in file
@@ -156,7 +156,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             #else
                 if ((file_pointer = fopen(file_path, "wb")) == NULL) {
                     fclose(file_pointer);
-                    return 1;
+                    return EXIT_FAILURE;
                 }
             #endif
             fwrite(compressed_data, compressed_size, 1, file_pointer);
@@ -206,7 +206,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             #else
                 if ((file_pointer = fopen(file_path, "wb")) == NULL) {
                     fclose(file_pointer);
-                    return 1;
+                    return EXIT_FAILURE;
                 }
             #endif
             fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
@@ -360,7 +360,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             #else
                 if ((file_pointer = fopen(file_path, "wb")) == NULL) {
                     fclose(file_pointer);
-                    return 1;
+                    return EXIT_FAILURE;
                 }
             #endif
             fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
@@ -371,7 +371,7 @@ int unpack(const char *archive_path, const char *folder_path) {
 
         } else {
             fclose(archive_pointer);
-            return 1;
+            return EXIT_FAILURE;
         }
 
         // Free file path and compressed data from memory
@@ -396,7 +396,7 @@ int pack(const char *folder_path, const char *archive_path) {
     DIR *folder_pointer = opendir(folder_path);
     if (folder_pointer == NULL) {
         closedir(folder_pointer);
-        return 1;
+        return EXIT_FAILURE;
     }
 
     // Open archive
@@ -410,7 +410,7 @@ int pack(const char *folder_path, const char *archive_path) {
     #else
         if ((archive_pointer = fopen(archive_path, "wb")) == NULL) {
             fclose(archive_pointer);
-            return 1;
+            return EXIT_FAILURE;
         }
     #endif
 
@@ -446,7 +446,7 @@ int pack(const char *folder_path, const char *archive_path) {
         #else
             if ((file_pointer = fopen(file_path, "wb")) == NULL) {
                 fclose(file_pointer);
-                return 1;
+                return EXIT_FAILURE;
             }
         #endif
         fseek(file_pointer, 0, SEEK_END);

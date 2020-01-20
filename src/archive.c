@@ -367,8 +367,8 @@ int unpack(const char *archive_path, const char *folder_path) {
 
 int pack(const char *folder_path, const char *archive_path) {
     // Open folder
-    DIR *folder_pointer = opendir(folder_path);
-    if (folder_pointer == NULL) {
+    DIR *folder_pointer = NULL;
+    if ((folder_pointer = opendir(folder_path)) == NULL) {
         fprintf(stderr, "Error opening folder %s\n", folder_path);
         return EXIT_FAILURE;
     }

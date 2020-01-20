@@ -94,6 +94,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         unsigned int compressed_size;
         if (fread(&compressed_size, 4, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
+            fprintf(stderr, "Could not read compressed size in archive %s\n", archive_path);
             return EXIT_FAILURE;
         }
 
@@ -101,6 +102,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         unsigned int uncompressed_size;
         if (fread(&uncompressed_size, 4, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
+            fprintf(stderr, "Could not read uncompressed size in archive %s\n", archive_path);
             return EXIT_FAILURE;
         }
 
@@ -108,6 +110,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         char compression_level;
         if (fread(&compression_level, 1, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
+            fprintf(stderr, "Could not read compression level in archive %s\n", archive_path);
             return EXIT_FAILURE;
         }
 

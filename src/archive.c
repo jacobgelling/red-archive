@@ -215,9 +215,9 @@ int unpack(const char *archive_path, const char *folder_path) {
             // Calculate bits used for offset and run length
             const unsigned char offset_bits = 6 - compression_level;
             if ( offset_bits > 8 ) {
-                printf("'%s' has unsupported run and offset length\n", filename);
                 free(file_path);
                 free(compressed_data);
+                fprintf(stderr, "Unsupported run and offset length\n");
                 continue;
             }
             const unsigned char run_length_bits = 8 - offset_bits;

@@ -367,8 +367,6 @@ int unpack(const char *archive_path, const char *folder_path) {
             return EXIT_FAILURE;
         }
 
-        // Free file path and compressed data from memory
-
         // Seek to next file positon
         seek = fseek(archive_pointer, position + compressed_size, SEEK_SET);
         if (seek) {

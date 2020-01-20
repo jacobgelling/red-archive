@@ -388,6 +388,9 @@ int pack(const char *folder_path, const char *archive_path) {
             continue;
         }
 
+        // Print current filename
+        printf("Adding %s to %s...\n", file_entry->d_name, archive_path);
+
         // Create file path
         const int filename_size = strlen(file_entry->d_name) + strlen(folder_path) + 2;
         char *file_path = malloc(filename_size);

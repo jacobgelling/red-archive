@@ -155,46 +155,54 @@ int unpack(const char *archive_path, const char *folder_path) {
             char *uncompressed_data = malloc(uncompressed_size);
             unsigned int uncompressed_pointer = 0;
 
+            // While there is still compressed data to read
             while (compressed_pointer < compressed_size) {
+                // Read flag byte
                 unsigned char flag = compressed_data[compressed_pointer];
                 compressed_pointer++;
+
+                // Next byte is duplicated x times
                 if (flag > 127) {
-                    // Next byte is duplicated x times
-                    char byte = compressed_data[compressed_pointer];
-                    compressed_pointer++;
+                    // Calculate times to duplicate
                     unsigned char count = flag - 125;
-                    for (unsigned char i = 0; i < count; i++) {
-                        uncompressed_data[uncompressed_pointer] = byte;
-                        uncompressed_pointer++;
-                    }
-                } else {
-                    // Next x bytes are copied without duplication
-                    for (unsigned char i = 0; i < flag + 1; i++) {
+
+                    // Duplicate byte and write to uncompressed data buffer
+                    for (unsigned char i = 0; i < count; i++, uncompressed_pointer++) {
                         uncompressed_data[uncompressed_pointer] = compressed_data[compressed_pointer];
-                        uncompressed_pointer++;
-                        compressed_pointer++;
+                    }
+                    compressed_pointer++;
+                // Next x bytes are copied without duplication
+                } else {
+                    for (unsigned char i = 0; i < flag + 1; i++, uncompressed_pointer++, compressed_pointer++) {
+                        uncompressed_data[uncompressed_pointer] = compressed_data[compressed_pointer];
                     }
                 }
             }
 
-            // Check uncompressed file matches expected size
+            // Print warning if output size does not match expected size
             if (uncompressed_pointer != uncompressed_size) {
-                printf("'%s' does not match expected size\n", filename);
+                fprintf(stderr, "Output size does not match expected size\n");
             }
 
             // Open file
-            FILE *file_pointer = NULL;
-            if ((file_pointer = fopen(file_path, "wb")) == NULL) {
+            FILE *file_pointer = fopen(file_path, "wb");
+            free(file_path);
+            if (file_pointer == NULL) {
+                fclose(archive_pointer);
+                free(uncompressed_data);
                 fprintf(stderr, "Error opening file %s\n", file_path);
                 return EXIT_FAILURE;
             }
 
-            // Copy from memory to file
-            fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
+            // Write uncompressed data to file
+            const int write_status = fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
             fclose(file_pointer);
-
-            // Free uncompressed data from memory
             free(uncompressed_data);
+            if (write_status != 1) {
+                fclose(archive_pointer);
+                fprintf(stderr, "Could not write file data\n");
+                return EXIT_FAILURE;
+            }
 
         } else if (compression_level > 1) {
             // Calculate bits used for offset and run length
@@ -221,7 +229,6 @@ int unpack(const char *archive_path, const char *folder_path) {
             int sliding_offset = 0;
 
             while (compressed_pointer < compressed_size) {
-
                 // Get flag
                 const char flag = compressed_data[compressed_pointer];
                 compressed_pointer++;
@@ -336,6 +343,7 @@ int unpack(const char *archive_path, const char *folder_path) {
                 fprintf(stderr, "Error opening file %s\n", file_path);
                 return EXIT_FAILURE;
             }
+            free(file_path);
 
             // Copy from memory to file
             fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
@@ -350,7 +358,6 @@ int unpack(const char *archive_path, const char *folder_path) {
         }
 
         // Free file path and compressed data from memory
-        free(file_path);
         free(compressed_data);
 
         // Seek to next file positon

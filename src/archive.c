@@ -128,15 +128,9 @@ int unpack(const char *archive_path, const char *folder_path) {
         // Create file path
         const size_t file_path_size = strlen(filename) + strlen(folder_path) + 2;
         char *file_path = malloc(file_path_size);
-        #ifdef _WIN32
-            strcpy_s(file_path, file_path_size, folder_path);
-            strcat_s(file_path, file_path_size, "/");
-            strcat_s(file_path, file_path_size, filename);
-        #else
-            strcpy(file_path, folder_path);
-            strcat(file_path, "/");
-            strcat(file_path, filename);
-        #endif
+        strcpy(file_path, folder_path);
+        strcat(file_path, "/");
+        strcat(file_path, filename);
 
         // Extract the file
         if (compression_level == 0) {

@@ -119,7 +119,11 @@ int unpack(const char *archive_path, const char *folder_path) {
 
         // Read compressed data
         char *compressed_data = malloc(compressed_size);
-        fread(compressed_data, compressed_size, 1, archive_pointer);
+        if (fread(&compressed_data, compressed_size, 1, archive_pointer) != 1) {
+            fclose(archive_pointer);
+            fprintf(stderr, "Could not read file data in archive %s\n", archive_path);
+            return EXIT_FAILURE;
+        }
 
         // Create file path
         const size_t file_path_size = strlen(filename) + strlen(folder_path) + 2;

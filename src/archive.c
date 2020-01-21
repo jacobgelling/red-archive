@@ -237,11 +237,11 @@ int unpack(const char *archive_path, const char *folder_path) {
             const int max_offset = ( 1 << ( offset_bits + 8 ) ) - 1;
 
             // Create compressed buffer
-            unsigned int compressed_pointer = 0;
+            uint_fast32_t compressed_pointer = 0;
 
             // Create uncompressed buffer
             char *uncompressed_data = malloc(uncompressed_size);
-            unsigned int uncompressed_pointer = 0;
+            uint_fast32_t uncompressed_pointer = 0;
 
             // Create sliding window
             char *sliding_window = malloc(max_offset);
@@ -317,7 +317,7 @@ int unpack(const char *archive_path, const char *folder_path) {
                             }
 
                             // Read byte from sliding window
-                            char *byte = &sliding_window[offset];
+                            const char *byte = &sliding_window[offset];
 
                             // Write byte to sliding window
                             sliding_window[sliding_offset] = *byte;

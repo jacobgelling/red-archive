@@ -145,12 +145,13 @@ int unpack(const char *archive_path, const char *folder_path) {
 
             // Open file
             FILE *file_pointer = fopen(file_path, "wb");
-            free(file_path);
             if (file_pointer == NULL) {
                 fclose(archive_pointer);
                 fprintf(stderr, "Error opening file %s\n", file_path);
+                free(file_path);
                 return EXIT_FAILURE;
             }
+            free(file_path);
 
             // Write uncompressed data to file
             fwrite(compressed_data, compressed_size, 1, file_pointer);
@@ -197,13 +198,14 @@ int unpack(const char *archive_path, const char *folder_path) {
 
             // Open file
             FILE *file_pointer = fopen(file_path, "wb");
-            free(file_path);
             if (file_pointer == NULL) {
                 fclose(archive_pointer);
                 free(uncompressed_data);
                 fprintf(stderr, "Error opening file %s\n", file_path);
+                free(file_path);
                 return EXIT_FAILURE;
             }
+            free(file_path);
 
             // Write uncompressed data to file
             const int write_status = fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
@@ -353,11 +355,12 @@ int unpack(const char *archive_path, const char *folder_path) {
 
             // Open file
             FILE *file_pointer = fopen(file_path, "wb");
-            free(file_path);
             if (file_pointer == NULL) {
                 fprintf(stderr, "Error opening file %s\n", file_path);
+                free(file_path);
                 return EXIT_FAILURE;
             }
+            free(file_path);
 
             // Copy from memory to file
             fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
@@ -418,6 +421,7 @@ int pack(const char *folder_path, const char *archive_path) {
         FILE *file_pointer = NULL;
         if ((file_pointer = fopen(file_path, "rb")) == NULL) {
             fprintf(stderr, "Error opening file %s\n", file_path);
+            free(file_path);
             return EXIT_FAILURE;
         }
         free(file_path);

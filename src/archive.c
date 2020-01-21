@@ -106,7 +106,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         size_t seek = fseek(archive_pointer, position + strlen(filename) + 1, SEEK_SET);
 
         // Read compressed size
-        unsigned int compressed_size;
+        uint32_t compressed_size;
         if (fread(&compressed_size, 4, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
             fprintf(stderr, "Could not read compressed size\n");
@@ -114,7 +114,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         }
 
         // Read uncompressed size
-        unsigned int uncompressed_size;
+        uint32_t uncompressed_size;
         if (fread(&uncompressed_size, 4, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
             fprintf(stderr, "Could not read uncompressed size\n");

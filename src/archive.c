@@ -271,15 +271,14 @@ int unpack(const char *archive_path, const char *folder_path) {
                         // Get offset and run length
                         int offset = -1;
                         unsigned int count = 0;
-                        for (unsigned char i = 0; i < 8; i++) {
+                        for (unsigned char i = 0; i < 8; i++, count++) {
                             if ( ( (compressed_data[compressed_pointer] >> i) & 1 ) == 1 ) {
                                 offset += 1 << count;
                             }
-                            count++;
                         }
                         compressed_pointer++;
                         unsigned int run_length = 2;
-                        for (unsigned char i = 0; i < 8; i++) {
+                        for (unsigned char i = 0; i < 8; i++, count++) {
                             if ( i == offset_bits ) {
                                 count = 0;
                             }
@@ -290,7 +289,6 @@ int unpack(const char *archive_path, const char *folder_path) {
                                     offset += 1 << count;
                                 }
                             }
-                            count++;
                         }
                         compressed_pointer++;
 

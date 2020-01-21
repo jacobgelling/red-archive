@@ -428,6 +428,11 @@ int pack(const char *folder_path, const char *archive_path) {
 
         // Get file size
         size_t file_size = get_file_size(file_pointer);
+        if (file_size > UINT_MAX) {
+            fprintf(stderr, "File is too large\n", file_path);
+            free(file_pointer);
+            return EXIT_FAILURE;
+        }
 
         // Read file data
         char *file_data = malloc(file_size);

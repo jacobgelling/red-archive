@@ -20,7 +20,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <limits.h>
+#include <stdint.h>
 
 int unpack(const char *archive_path, const char *folder_path);
 int pack(const char *folder_path, const char *archive_path);

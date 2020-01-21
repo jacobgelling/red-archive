@@ -395,6 +395,7 @@ int pack(const char *folder_path, const char *archive_path) {
     // Open archive
     FILE *archive_pointer = NULL;
     if ((archive_pointer = fopen(archive_path, "wb")) == NULL) {
+        closedir(folder_pointer);
         fprintf(stderr, "Error opening archive %s\n", archive_path);
         return EXIT_FAILURE;
     }

@@ -439,12 +439,11 @@ int pack(const char *folder_path, const char *archive_path) {
         fread(file_data, file_size, 1, file_pointer);
         fclose(file_pointer);
 
-        // Convert file size to bytes
+        // Convert file size to byte array
         char file_size_bytes[4];
-        file_size_bytes[3] = ((unsigned int) file_size >> 24) & 0xFF;
-        file_size_bytes[2] = ((unsigned int) file_size >> 16) & 0xFF;
-        file_size_bytes[1] = ((unsigned int) file_size >> 8) & 0xFF;
-        file_size_bytes[0] = (unsigned int) file_size & 0xFF;
+        for (int i = 0; i < 4; i++) {
+            file_size_bytes[i] = (file_size >> 8 * i) & 0xFF;
+        }
 
         // Create metadata
         const int metadata_size = strlen(file_entry->d_name) + 10;

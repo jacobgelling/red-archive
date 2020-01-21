@@ -43,6 +43,13 @@ static char *make_file_path(const char *folder_path, const char *filename) {
     return file_path;
 }
 
+static const size_t get_file_size(FILE *file_pointer) {
+    fseek(file_pointer, 0, SEEK_END);
+    const size_t file_size = ftell(file_pointer);
+    fseek(file_pointer, 0, SEEK_SET);
+    return file_size;
+}
+
 int unpack(const char *archive_path, const char *folder_path) {
     // Open archive
     FILE *archive_pointer = NULL;
@@ -425,9 +432,7 @@ int pack(const char *folder_path, const char *archive_path) {
         free(file_path);
 
         // Get file size
-        fseek(file_pointer, 0, SEEK_END);
-        size_t file_size = ftell(file_pointer);
-        fseek(file_pointer, 0, SEEK_SET);
+        size_t file_size = get_file_size(file_pointer);
 
         // Read file data
         char *file_data = malloc(file_size);

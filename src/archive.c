@@ -35,6 +35,14 @@ static bool valid_filename_character(const char character) {
     return false;
 }
 
+static char *make_file_path(const char *folder_path, const char *filename) {
+    char *file_path = malloc(strlen(filename) + strlen(folder_path) + 2);
+    strcpy(file_path, folder_path);
+    strcat(file_path, "/");
+    strcat(file_path, filename);
+    return file_path;
+}
+
 int unpack(const char *archive_path, const char *folder_path) {
     // Open archive
     FILE *archive_pointer = NULL;
@@ -126,11 +134,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         }
 
         // Create file path
-        const size_t file_path_size = strlen(filename) + strlen(folder_path) + 2;
-        char *file_path = malloc(file_path_size);
-        strcpy(file_path, folder_path);
-        strcat(file_path, "/");
-        strcat(file_path, filename);
+        char *file_path = make_file_path(folder_path, filename);
 
         // Extract the file
         if (compression_level == 0) {
@@ -407,11 +411,7 @@ int pack(const char *folder_path, const char *archive_path) {
         printf("Adding %s to %s...\n", file_entry->d_name, archive_path);
 
         // Create file path
-        const int filename_size = strlen(file_entry->d_name) + strlen(folder_path) + 2;
-        char *file_path = malloc(filename_size);
-        strcpy(file_path, folder_path);
-        strcat(file_path, "/");
-        strcat(file_path, file_entry->d_name);
+        char *file_path = make_file_path(folder_path, file_entry->d_name);
 
         // Open file
         FILE *file_pointer = NULL;

@@ -174,8 +174,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             // While there is still compressed data to read
             while (compressed_pointer < compressed_size) {
                 // Read flag byte
-                const unsigned char flag = compressed_data[compressed_pointer];
-                compressed_pointer++;
+                const unsigned char flag = compressed_data[compressed_pointer++];
 
                 // Next byte is duplicated x times
                 if (flag > 127) {
@@ -183,14 +182,14 @@ int unpack(const char *archive_path, const char *folder_path) {
                     const unsigned char count = flag - 125;
 
                     // Duplicate byte and write to uncompressed data buffer
-                    for (unsigned char i = 0; i < count; i++, uncompressed_pointer++) {
-                        uncompressed_data[uncompressed_pointer] = compressed_data[compressed_pointer];
+                    for (unsigned char i = 0; i < count; i++) {
+                        uncompressed_data[uncompressed_pointer++] = compressed_data[compressed_pointer];
                     }
                     compressed_pointer++;
                 // Next x bytes are copied without duplication
                 } else {
-                    for (unsigned char i = 0; i < flag + 1; i++, uncompressed_pointer++, compressed_pointer++) {
-                        uncompressed_data[uncompressed_pointer] = compressed_data[compressed_pointer];
+                    for (unsigned char i = 0; i < flag + 1; i++) {
+                        uncompressed_data[uncompressed_pointer++] = compressed_data[compressed_pointer++];
                     }
                 }
             }
@@ -251,24 +250,21 @@ int unpack(const char *archive_path, const char *folder_path) {
             // While there is still compressed data to read
             while (compressed_pointer < compressed_size) {
                 // Read flag byte
-                const char flag = compressed_data[compressed_pointer];
-                compressed_pointer++;
+                const char flag = compressed_data[compressed_pointer++];
 
                 for (unsigned char bit = 0; bit < 8; bit++) {
                     // If data is uncompressed
                     if ( ( (flag >> bit) & 1 ) == 1 ) {
                         // Get byte from compressed buffer
-                        char *byte = &compressed_data[compressed_pointer];
-                        compressed_pointer++;
+                        char *byte = &compressed_data[compressed_pointer++];
 
                         // Write byte to uncompressed buffer and sliding window
-                        uncompressed_data[uncompressed_pointer] = *byte;
-                        uncompressed_pointer++;
+                        uncompressed_data[uncompressed_pointer++] = *byte;
 
                         // Write byte to sliding window
                         sliding_window[sliding_offset] = *byte;
                         if ( sliding_offset < max_offset ) {
-                            ++sliding_offset;
+                            sliding_offset++;
                         } else {
                             sliding_offset = 0;
                         }
@@ -326,14 +322,13 @@ int unpack(const char *archive_path, const char *folder_path) {
                             // Write byte to sliding window
                             sliding_window[sliding_offset] = *byte;
                             if ( sliding_offset < max_offset ) {
-                                ++sliding_offset;
+                                sliding_offset++;
                             } else {
                                 sliding_offset = 0;
                             }
 
                             // Write byte to uncompressed buffer
-                            uncompressed_data[uncompressed_pointer] = *byte;
-                            uncompressed_pointer++;
+                            uncompressed_data[uncompressed_pointer++] = *byte;
 
                             // Calculate next offset
                             if ( offset < max_offset ) {

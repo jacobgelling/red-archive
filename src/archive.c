@@ -243,9 +243,9 @@ int unpack(const char *archive_path, const char *folder_path) {
             char *uncompressed_data = malloc(uncompressed_size);
             uint_fast32_t uncompressed_pointer = 0;
 
-            // Create sliding window
-            char *sliding_window = malloc(max_offset);
-            int sliding_offset = 0;
+            // Create circular buffer
+            char *circular_buffer = malloc(max_offset);
+            int circular_offset = 0;
 
             // While there is still compressed data to read
             while (compressed_pointer < compressed_size) {
@@ -258,15 +258,15 @@ int unpack(const char *archive_path, const char *folder_path) {
                         // Get byte from compressed buffer
                         char *byte = &compressed_data[compressed_pointer++];
 
-                        // Write byte to uncompressed buffer and sliding window
+                        // Write byte to uncompressed buffer and circular buffer
                         uncompressed_data[uncompressed_pointer++] = *byte;
 
-                        // Write byte to sliding window
-                        sliding_window[sliding_offset] = *byte;
-                        if ( sliding_offset < max_offset ) {
-                            sliding_offset++;
+                        // Write byte to circular buffer
+                        circular_buffer[circular_offset] = *byte;
+                        if ( circular_offset < max_offset ) {
+                            circular_offset++;
                         } else {
-                            sliding_offset = 0;
+                            circular_offset = 0;
                         }
 
                     // If data is compressed
@@ -316,15 +316,15 @@ int unpack(const char *archive_path, const char *folder_path) {
                                 goto ESCAPE_LOOP;
                             }
 
-                            // Read byte from sliding window
-                            const char *byte = &sliding_window[offset];
+                            // Read byte from circular buffer
+                            const char *byte = &circular_buffer[offset];
 
-                            // Write byte to sliding window
-                            sliding_window[sliding_offset] = *byte;
-                            if ( sliding_offset < max_offset ) {
-                                sliding_offset++;
+                            // Write byte to circular buffer
+                            circular_buffer[circular_offset] = *byte;
+                            if ( circular_offset < max_offset ) {
+                                circular_offset++;
                             } else {
-                                sliding_offset = 0;
+                                circular_offset = 0;
                             }
 
                             // Write byte to uncompressed buffer
@@ -344,8 +344,8 @@ int unpack(const char *archive_path, const char *folder_path) {
                 }
             }
 
-            // Free sliding window and compressed data from memory
-            free(sliding_window);
+            // Free circular buffer and compressed data from memory
+            free(circular_buffer);
             free(compressed_data);
 
             // Check file matches expected size

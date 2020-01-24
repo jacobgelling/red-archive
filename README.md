@@ -58,6 +58,6 @@ It has a compression type value ranging from 2 to 6. The size in bits for the ru
 
 The bits in a flag byte represent whether the following 8 chunks are compressed or uncompressed.
 
-If a chunk is uncompressed, it is a single uncompressed byte and is copied to the round buffer and output buffer.
+If a chunk is uncompressed, it is a single uncompressed byte and is copied to the circular and output buffer.
 
-If a chunk is compressed, it consists of two bytes which, on a bit-level as dictated by the compression type value, represent the offset in the round buffer and run length. These bytes are then copied to the round buffer and output buffer.
+If a chunk is compressed, it consists of two bytes which, on a bit-level as dictated by the compression type value, represent the offset and run length in the circular buffer. These bytes are then copied to the circular and output buffer.

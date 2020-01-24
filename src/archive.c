@@ -411,6 +411,12 @@ int pack(const char *folder_path, const char *archive_path) {
             continue;
         }
 
+        // Skip files with long names
+        if (strlen(file_entry->d_name) >= FILENAME_SIZE) {
+            printf("Skipping file with long filename %s\n", file_entry->d_name);
+            continue;
+        }
+
         // Print current filename
         printf("Adding %s to %s...\n", file_entry->d_name, archive_path);
 

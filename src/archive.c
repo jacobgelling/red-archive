@@ -161,9 +161,14 @@ int unpack(const char *archive_path, const char *folder_path) {
             free(file_path);
 
             // Write uncompressed data to file
-            fwrite(compressed_data, compressed_size, 1, file_pointer);
+            const int write_status = fwrite(compressed_data, compressed_size, 1, file_pointer);
             fclose(file_pointer);
             free(compressed_data);
+            if (write_status != 1) {
+                fclose(archive_pointer);
+                fprintf(stderr, "Error writing file data\n");
+                return EXIT_FAILURE;
+            }
 
         } else if (compression_level == 1) {
             // Perform type 1 decompression

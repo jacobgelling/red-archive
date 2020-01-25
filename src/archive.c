@@ -360,16 +360,20 @@ int unpack(const char *archive_path, const char *folder_path) {
             FILE *file_pointer = fopen(file_path, "wb");
             free(file_path);
             if (file_pointer == NULL) {
+                fclose(archive_pointer);
                 fprintf(stderr, "Error opening file\n");
                 return EXIT_FAILURE;
             }
 
             // Copy from memory to file
-            fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
+            const int write_status = fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
             fclose(file_pointer);
-
-            // Free uncompressed data from memory
             free(uncompressed_data);
+            if (write_status != 1) {
+                fclose(archive_pointer);
+                fprintf(stderr, "Error writing file data\n");
+                return EXIT_FAILURE;
+            }
 
         } else {
             fclose(archive_pointer);
@@ -458,13 +462,25 @@ int pack(const char *folder_path, const char *archive_path) {
         memcpy(&metadata[metadata_size - 5], &file_size_bytes, 4);
         metadata[metadata_size - 1] = '\0';
 
-        // Write metadata to file
-        fwrite(metadata, metadata_size, 1, archive_pointer);
+        // Write metadata to arhive
+        int write_status = fwrite(metadata, metadata_size, 1, archive_pointer);
         free(metadata);
+        if (write_status != 1) {
+            closedir(folder_pointer);
+            fclose(archive_pointer);
+            fprintf(stderr, "Error writing metadata to archive\n");
+            return EXIT_FAILURE;
+        }
 
         // Write file data to file
-        fwrite(file_data, file_size, 1, archive_pointer);
+        write_status = fwrite(file_data, file_size, 1, archive_pointer);
         free(file_data);
+        if (write_status != 1) {
+            closedir(folder_pointer);
+            fclose(archive_pointer);
+            fprintf(stderr, "Error writing file data to archive\n");
+            return EXIT_FAILURE;
+        }
     }
 
     // Close folder

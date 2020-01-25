@@ -239,10 +239,10 @@ int unpack(const char *archive_path, const char *folder_path) {
             const unsigned int max_run_length = (1 << run_length_bits) + 2;
             const int max_offset = ( 1 << ( offset_bits + 8 ) ) - 1;
 
-            // Create compressed buffer
+            // Create compressed pointer
             uint_fast32_t compressed_pointer = 0;
 
-            // Create uncompressed buffer
+            // Create uncompressed buffer and pointer
             char *uncompressed_data = malloc(uncompressed_size);
             uint_fast32_t uncompressed_pointer = 0;
 
@@ -257,7 +257,7 @@ int unpack(const char *archive_path, const char *folder_path) {
 
                 for (unsigned char bit = 0; bit < 8; bit++) {
                     // If data is uncompressed
-                    if ( ( (flag >> bit) & 1 ) == 1 ) {
+                    if (((flag >> bit) & 1) == 1) {
                         // Get byte from compressed buffer
                         char *byte = &compressed_data[compressed_pointer++];
 
@@ -278,7 +278,7 @@ int unpack(const char *archive_path, const char *folder_path) {
                         int offset = -1;
                         unsigned int count = 0;
                         for (unsigned char i = 0; i < 8; i++, count++) {
-                            if ( ( (compressed_data[compressed_pointer] >> i) & 1 ) == 1 ) {
+                            if (((compressed_data[compressed_pointer] >> i) & 1) == 1) {
                                 offset += 1 << count;
                             }
                         }
@@ -288,7 +288,7 @@ int unpack(const char *archive_path, const char *folder_path) {
                             if ( i == offset_bits ) {
                                 count = 0;
                             }
-                            if ( ( (compressed_data[compressed_pointer] >> i) & 1 ) == 1 ) {
+                            if (((compressed_data[compressed_pointer] >> i) & 1) == 1) {
                                 if ( i >= offset_bits ) {
                                     run_length += 1 << count;
                                 } else {
@@ -438,7 +438,7 @@ int pack(const char *folder_path, const char *archive_path) {
         // Get file size
         const size_t file_size = get_file_size(file_pointer);
         if (file_size > UINT32_MAX) {
-            fprintf(stderr, "File is too large\n", file_path);
+            fprintf(stderr, "File is too large\n");
             free(file_pointer);
             return EXIT_FAILURE;
         }

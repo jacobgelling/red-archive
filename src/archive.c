@@ -152,13 +152,12 @@ int unpack(const char *archive_path, const char *folder_path) {
 
             // Open file
             FILE *file_pointer = fopen(file_path, "wb");
+            free(file_path);
             if (file_pointer == NULL) {
                 fclose(archive_pointer);
-                fprintf(stderr, "Error opening file %s\n", file_path);
-                free(file_path);
+                fprintf(stderr, "Error creating file\n");
                 return EXIT_FAILURE;
             }
-            free(file_path);
 
             // Write uncompressed data to file
             const int write_status = fwrite(compressed_data, compressed_size, 1, file_pointer);
@@ -209,14 +208,13 @@ int unpack(const char *archive_path, const char *folder_path) {
 
             // Open file
             FILE *file_pointer = fopen(file_path, "wb");
+            free(file_path);
             if (file_pointer == NULL) {
                 fclose(archive_pointer);
                 free(uncompressed_data);
-                fprintf(stderr, "Error opening file %s\n", file_path);
-                free(file_path);
+                fprintf(stderr, "Error creating file\n");
                 return EXIT_FAILURE;
             }
-            free(file_path);
 
             // Write uncompressed data to file
             const int write_status = fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
@@ -224,7 +222,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             free(uncompressed_data);
             if (write_status != 1) {
                 fclose(archive_pointer);
-                fprintf(stderr, "Could not write file data\n");
+                fprintf(stderr, "Error writing file data\n");
                 return EXIT_FAILURE;
             }
 
@@ -360,12 +358,11 @@ int unpack(const char *archive_path, const char *folder_path) {
 
             // Open file
             FILE *file_pointer = fopen(file_path, "wb");
+            free(file_path);
             if (file_pointer == NULL) {
-                fprintf(stderr, "Error opening file %s\n", file_path);
-                free(file_path);
+                fprintf(stderr, "Error opening file\n");
                 return EXIT_FAILURE;
             }
-            free(file_path);
 
             // Copy from memory to file
             fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
@@ -425,17 +422,14 @@ int pack(const char *folder_path, const char *archive_path) {
         // Print current filename
         printf("Adding %s to %s...\n", file_entry->d_name, archive_path);
 
-        // Create file path
-        char *file_path = make_file_path(folder_path, file_entry->d_name);
-
         // Open file
-        FILE *file_pointer = NULL;
-        if ((file_pointer = fopen(file_path, "rb")) == NULL) {
-            fprintf(stderr, "Error opening file %s\n", file_path);
-            free(file_path);
+        char *file_path = make_file_path(folder_path, file_entry->d_name);
+        FILE *file_pointer = fopen(file_path, "rb");
+        free(file_path);
+        if (file_pointer == NULL) {
+            fprintf(stderr, "Error opening file\n");
             return EXIT_FAILURE;
         }
-        free(file_path);
 
         // Get file size
         const size_t file_size = get_file_size(file_pointer);

@@ -494,5 +494,5 @@ int pack(const char *folder_path, const char *archive_path) {
     fclose(archive_pointer);
 
     // Reached end, success
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -27,3 +27,6 @@ add_executable(red-archive ${PROJECT_SOURCE_DIR}/src/cli.c ${PROJECT_SOURCE_DIR}
 
 # Display all warnings
 set(CMAKE_C_FLAGS "-Wall -Wextra")
+
+# Optimise release executable
+set(CMAKE_C_FLAGS_RELEASE "-O3")

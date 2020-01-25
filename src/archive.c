@@ -237,7 +237,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             }
             const unsigned char run_length_bits = 8 - offset_bits;
             const unsigned int max_run_length = (1 << run_length_bits) + 2;
-            const int max_offset = ( 1 << ( offset_bits + 8 ) ) - 1;
+            const int max_offset = (1 << ( offset_bits + 8)) - 1;
 
             // Create compressed pointer
             uint_fast32_t compressed_pointer = 0;

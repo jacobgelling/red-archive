@@ -24,3 +24,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 # Set executables to compile
 add_executable(red-archive ${PROJECT_SOURCE_DIR}/src/cli.c ${PROJECT_SOURCE_DIR}/src/archive.c)
+
+# Display all warnings
+set(CMAKE_C_FLAGS "-Wall -Wextra")

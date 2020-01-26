@@ -84,7 +84,7 @@ int unpack(const char *archive_path, const char *folder_path) {
 
         // Ensure filename is valid
         const size_t filename_last_i = filename_read - 1;
-        for (int i = 0; i < filename_read; i++) {
+        for (size_t i = 0; i < filename_read; i++) {
             // Break if null-terminator found
             if (i > 0 && filename_buffer[i] == 0) {
                 break;

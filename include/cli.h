@@ -7,6 +7,7 @@
 #ifndef REDARCHIVE_CLI_H
 #define REDARCHIVE_CLI_H
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "version.h"

@@ -43,7 +43,7 @@ static char *make_file_path(const char *folder_path, const char *filename) {
     return file_path;
 }
 
-static const size_t get_file_size(FILE *file_pointer) {
+static size_t get_file_size(FILE *file_pointer) {
     fseek(file_pointer, 0, SEEK_END);
     const size_t file_size = ftell(file_pointer);
     fseek(file_pointer, 0, SEEK_SET);

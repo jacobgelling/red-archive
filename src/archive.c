@@ -472,7 +472,7 @@ int pack(const char *folder_path, const char *archive_path) {
             return EXIT_FAILURE;
         }
 
-        // Write file data to file
+        // Write file data to archive
         write_status = fwrite(file_data, file_size, 1, archive_pointer);
         free(file_data);
         if (write_status != 1) {

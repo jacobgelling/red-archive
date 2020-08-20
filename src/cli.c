@@ -7,9 +7,6 @@
 #include "cli.h"
 
 int main(const int argc, char *argv[]) {
-    // Set return code to success
-    int return_code = EXIT_SUCCESS;
-
     switch (argc) {
         // No arguments provided
         case 1:
@@ -25,9 +22,13 @@ int main(const int argc, char *argv[]) {
         // Correct number of arguments provided
         case 4:
             if (strcmp(argv[1], "-u") == 0 || strcmp(argv[1], "--unpack") == 0) {
-                return_code = unpack(argv[2], argv[3]);
+                if (unpack(argv[2], argv[3]) != 1) {
+                    return EXIT_FAILURE;
+                }
             } else if (strcmp(argv[1], "-p") == 0 || strcmp(argv[1], "--pack") == 0) {
-                return_code = pack(argv[2], argv[3]);
+                if (pack(argv[2], argv[3]) != 1) {
+                    return EXIT_FAILURE;
+                }
             } else {
                 fprintf(stderr, "Unknown option %s\n", argv[1]);
                 return EXIT_FAILURE;
@@ -40,5 +41,5 @@ int main(const int argc, char *argv[]) {
             return EXIT_FAILURE;
     }
 
-    return return_code;
+    return EXIT_SUCCESS;
 }

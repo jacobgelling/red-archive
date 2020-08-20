@@ -55,7 +55,7 @@ int unpack(const char *archive_path, const char *folder_path) {
     FILE *archive_pointer = NULL;
     if ((archive_pointer = fopen(archive_path, "rb")) == NULL) {
         fprintf(stderr, "Error opening archive %s\n", archive_path);
-        return EXIT_FAILURE;
+        return 0;
     }
 
     // Create folder
@@ -74,7 +74,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         if (filename_read == 0) {
             fclose(archive_pointer);
             fprintf(stderr, "Could not read filename in archive %s\n", archive_path);
-            return EXIT_FAILURE;
+            return 0;
         }
 
         // Finish unpacking if end of file byte found
@@ -92,7 +92,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             } else if (!valid_filename_character(filename_buffer[i]) || (i == filename_last_i && filename_buffer[i] != 0)) {
                 fclose(archive_pointer);
                 fprintf(stderr, "Invalid filename in archive %s\n", archive_path);
-                return EXIT_FAILURE;
+                return 0;
             }
         }
 
@@ -110,7 +110,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         if (fread(&compressed_size, 4, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
             fprintf(stderr, "Could not read compressed size\n");
-            return EXIT_FAILURE;
+            return 0;
         }
 
         // Read uncompressed size
@@ -118,7 +118,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         if (fread(&uncompressed_size, 4, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
             fprintf(stderr, "Could not read uncompressed size\n");
-            return EXIT_FAILURE;
+            return 0;
         }
 
         // Read compression level
@@ -126,7 +126,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         if (fread(&compression_level, 1, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
             fprintf(stderr, "Could not read compression level\n");
-            return EXIT_FAILURE;
+            return 0;
         }
 
         // Get position in file
@@ -137,7 +137,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         if (fread(compressed_data, compressed_size, 1, archive_pointer) != 1) {
             fclose(archive_pointer);
             fprintf(stderr, "Could not read file data\n");
-            return EXIT_FAILURE;
+            return 0;
         }
 
         // Create file path
@@ -156,7 +156,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             if (file_pointer == NULL) {
                 fclose(archive_pointer);
                 fprintf(stderr, "Error creating file\n");
-                return EXIT_FAILURE;
+                return 0;
             }
 
             // Write uncompressed data to file
@@ -166,7 +166,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             if (write_status != 1) {
                 fclose(archive_pointer);
                 fprintf(stderr, "Error writing file data\n");
-                return EXIT_FAILURE;
+                return 0;
             }
 
         } else if (compression_level == 1) {
@@ -213,7 +213,7 @@ int unpack(const char *archive_path, const char *folder_path) {
                 fclose(archive_pointer);
                 free(uncompressed_data);
                 fprintf(stderr, "Error creating file\n");
-                return EXIT_FAILURE;
+                return 0;
             }
 
             // Write uncompressed data to file
@@ -223,7 +223,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             if (write_status != 1) {
                 fclose(archive_pointer);
                 fprintf(stderr, "Error writing file data\n");
-                return EXIT_FAILURE;
+                return 0;
             }
 
         } else if (compression_level > 1) {
@@ -362,7 +362,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             if (file_pointer == NULL) {
                 fclose(archive_pointer);
                 fprintf(stderr, "Error opening file\n");
-                return EXIT_FAILURE;
+                return 0;
             }
 
             // Copy from memory to file
@@ -372,12 +372,12 @@ int unpack(const char *archive_path, const char *folder_path) {
             if (write_status != 1) {
                 fclose(archive_pointer);
                 fprintf(stderr, "Error writing file data\n");
-                return EXIT_FAILURE;
+                return 0;
             }
 
         } else {
             fclose(archive_pointer);
-            return EXIT_FAILURE;
+            return 0;
         }
 
         // Seek to next file positon
@@ -390,7 +390,7 @@ int unpack(const char *archive_path, const char *folder_path) {
 
     // Close archive and return success code
     fclose(archive_pointer);
-    return EXIT_SUCCESS;
+    return 1;
 }
 
 int pack(const char *folder_path, const char *archive_path) {
@@ -398,7 +398,7 @@ int pack(const char *folder_path, const char *archive_path) {
     DIR *folder_pointer = NULL;
     if ((folder_pointer = opendir(folder_path)) == NULL) {
         fprintf(stderr, "Error opening folder %s\n", folder_path);
-        return EXIT_FAILURE;
+        return 0;
     }
 
     // Open archive
@@ -406,7 +406,7 @@ int pack(const char *folder_path, const char *archive_path) {
     if ((archive_pointer = fopen(archive_path, "wb")) == NULL) {
         closedir(folder_pointer);
         fprintf(stderr, "Error opening archive %s\n", archive_path);
-        return EXIT_FAILURE;
+        return 0;
     }
 
     // For each file in folder
@@ -432,7 +432,7 @@ int pack(const char *folder_path, const char *archive_path) {
         free(file_path);
         if (file_pointer == NULL) {
             fprintf(stderr, "Error opening file\n");
-            return EXIT_FAILURE;
+            return 0;
         }
 
         // Get file size
@@ -440,7 +440,7 @@ int pack(const char *folder_path, const char *archive_path) {
         if (file_size > UINT32_MAX) {
             fprintf(stderr, "File is too large\n");
             free(file_pointer);
-            return EXIT_FAILURE;
+            return 0;
         }
 
         // Read file data
@@ -469,7 +469,7 @@ int pack(const char *folder_path, const char *archive_path) {
             closedir(folder_pointer);
             fclose(archive_pointer);
             fprintf(stderr, "Error writing metadata to archive\n");
-            return EXIT_FAILURE;
+            return 0;
         }
 
         // Write file data to archive
@@ -479,7 +479,7 @@ int pack(const char *folder_path, const char *archive_path) {
             closedir(folder_pointer);
             fclose(archive_pointer);
             fprintf(stderr, "Error writing file data to archive\n");
-            return EXIT_FAILURE;
+            return 0;
         }
     }
 
@@ -494,5 +494,5 @@ int pack(const char *folder_path, const char *archive_path) {
     fclose(archive_pointer);
 
     // Reached end, success
-    return EXIT_SUCCESS;
+    return 1;
 }

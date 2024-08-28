@@ -1,7 +1,7 @@
 /*
  * Red Archive
  * MIT License
- * Copyright (c) 2020 Jacob Gelling
+ * Copyright (c) 2024 Jacob Gelling
  */
 
 #include "cli.h"
@@ -12,7 +12,7 @@ int main(const int argc, char *argv[]) {
         case 1:
             printf("Red Archive %d.%d\n", REDARCHIVE_VERSION_MAJOR, REDARCHIVE_VERSION_MINOR);
             printf("MIT License\n");
-            printf("Copyright (c) 2020 Jacob Gelling\n\n");
+            printf("Copyright (c) 2024 Jacob Gelling\n\n");
             printf("  To unpack an archive into a folder:\n");
             printf("  %s -u archive folder\n\n", argv[0]);
             printf("  To pack a folder into an archive:\n");

@@ -9,7 +9,10 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Install clang-tidy
-        run: sudo apt-get update && sudo apt-get install -y clang-tidy
+        run: sudo apt-get update && sudo apt-get install -y cmake clang-tidy
+
+      - name: Configure CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Run clang-tidy
-        run: find src include -name "*.[ch]" -type f | xargs clang-tidy --
+        run: find src include -name "*.[ch]" -type f -print0 | xargs -0 -r clang-tidy -p build --

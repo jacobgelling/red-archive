@@ -15,4 +15,4 @@ jobs:
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Run clang-tidy
-        run: find src include -name "*.[ch]" -type f | xargs -r clang-tidy -p build --
+        run: find src include -name "*.[ch]" -type f | xargs clang-tidy -p build

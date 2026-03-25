@@ -12,5 +12,4 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y clang-tidy
 
       - name: Run clang-tidy
-        run: clang-tidy src/**/*.c --
-        shell: bash
+        run: find src include -name "*.[ch]" -type f | xargs clang-tidy --

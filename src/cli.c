@@ -40,6 +40,5 @@ int main(const int argc, char *argv[]) {
             fprintf(stderr, "Incorrect number of arguments\n");
             return EXIT_FAILURE;
     }
-
     return EXIT_SUCCESS;
 }

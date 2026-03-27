@@ -439,7 +439,7 @@ int pack(const char *folder_path, const char *archive_path) {
         const size_t file_size = get_file_size(file_pointer);
         if (file_size > UINT32_MAX) {
             fprintf(stderr, "File is too large\n");
-            free(file_pointer);
+            fclose(file_pointer);
             return 0;
         }
 

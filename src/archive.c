@@ -13,7 +13,7 @@ static inline void make_folder(const char *folder_path)  {
     #ifdef _WIN32
         _mkdir(folder_path);
     #else
-        mkdir(folder_path, 0777);
+        mkdir(folder_path, 0755);
     #endif
 }
 

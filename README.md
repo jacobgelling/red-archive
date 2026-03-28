@@ -36,12 +36,12 @@ The Big Red Racing archive format and compression methods are unidentified and t
 The archive format has no header like is typical with other formats, and does not support directories. Each file is stored consecutively in the archive, with a structure as shown below.
 
 | Offset   | Bytes | Description                 |
-| -------- | ----- | --------------------------- |
+|----------|-------|-----------------------------|
 | 0        | *n*   | File name (null-terminated) |
 | *n*      | 4     | Compressed size (*m*)       |
 | *n* + 4  | 4     | Uncompressed size           |
 | *n* + 8  | 1     | Compression type            |
-| *n* + 9 | *m*   | File data                    |
+| *n* + 9  | *m*   | File data                   |
 
 ### Compression Type 0
 Type 0 indicates an uncompressed file.

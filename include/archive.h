@@ -1,9 +1,3 @@
-/*
- * Red Archive
- * MIT License
- * Copyright (c) 2020 Jacob Gelling
- */
-
 #ifndef REDARCHIVE_ARCHIVE_H
 #define REDARCHIVE_ARCHIVE_H
 

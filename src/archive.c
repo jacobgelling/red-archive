@@ -1,9 +1,3 @@
-/*
- * Red Archive
- * MIT License
- * Copyright (c) 2020 Jacob Gelling
- */
-
 #include "archive.h"
 
 // Set filename size to length of 8.3 filename with null-terminator

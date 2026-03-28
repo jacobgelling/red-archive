@@ -1,7 +1,3 @@
-# Red Archive
-# MIT License
-# Copyright (c) 2020 Jacob Gelling
-
 # Set minimum CMake version
 cmake_minimum_required(VERSION 3.10)
 

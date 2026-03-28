@@ -1,9 +1,3 @@
-/*
- * Red Archive
- * MIT License
- * Copyright (c) 2020 Jacob Gelling
- */
-
 #include "cli.h"
 
 int main(const int argc, char *argv[]) {

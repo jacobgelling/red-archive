@@ -21,6 +21,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 # Set executables to compile
 add_executable(red-archive ${PROJECT_SOURCE_DIR}/src/cli.c ${PROJECT_SOURCE_DIR}/src/archive.c)
 
+# Define _CRT_SECURE_NO_WARNINGS for Windows
+if (WIN32)
+    add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+endif (WIN32)
+
 # Display all warnings
 set(CMAKE_C_FLAGS "-Wall")
 

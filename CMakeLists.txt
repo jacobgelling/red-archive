@@ -7,9 +7,13 @@ project(red-archive LANGUAGES C VERSION 0.2)
 # Create version header file
 configure_file(${PROJECT_SOURCE_DIR}/include/version.h.in ${PROJECT_SOURCE_DIR}/include/version.h)
 
-# Include dirent for Windows
+# Windows-only
 if (WIN32)
+    # Include dirent
     include_directories(${PROJECT_SOURCE_DIR}/dirent)
+
+    # Define _CRT_SECURE_NO_WARNINGS
+    add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 endif (WIN32)
 
 # Include header files
@@ -20,11 +24,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 # Set executables to compile
 add_executable(red-archive ${PROJECT_SOURCE_DIR}/src/cli.c ${PROJECT_SOURCE_DIR}/src/archive.c)
-
-# Define _CRT_SECURE_NO_WARNINGS for Windows
-if (WIN32)
-    add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-endif (WIN32)
 
 # Display all warnings
 set(CMAKE_C_FLAGS "-Wall")

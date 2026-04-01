@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Set project name, language and version
-project(red-archive LANGUAGES C VERSION 0.2)
+project(red-archive LANGUAGES C VERSION 1.0)
 
 # Create version header file
 configure_file(${PROJECT_SOURCE_DIR}/include/version.h.in ${PROJECT_SOURCE_DIR}/include/version.h)

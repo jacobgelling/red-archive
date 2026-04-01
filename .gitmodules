@@ -1,0 +1,3 @@
+[submodule "third_party/dirent"]
+	path = third_party/dirent
+	url = https://github.com/tronkko/dirent.git

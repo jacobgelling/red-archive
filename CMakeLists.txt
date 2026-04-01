@@ -10,7 +10,7 @@ configure_file(${PROJECT_SOURCE_DIR}/include/version.h.in ${PROJECT_SOURCE_DIR}/
 # Windows-only
 if (WIN32)
     # Include dirent
-    include_directories(${PROJECT_SOURCE_DIR}/dirent)
+    include_directories(${PROJECT_SOURCE_DIR}/third_party/dirent/include)
 
     # Define _CRT_SECURE_NO_WARNINGS
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)

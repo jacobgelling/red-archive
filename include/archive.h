@@ -1,5 +1,5 @@
-#ifndef REDARCHIVE_ARCHIVE_H
-#define REDARCHIVE_ARCHIVE_H
+#ifndef RED_ARCHIVE_ARCHIVE_H
+#define RED_ARCHIVE_ARCHIVE_H
 
 #ifdef _WIN32
     #include <direct.h>

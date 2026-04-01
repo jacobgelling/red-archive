@@ -4,7 +4,7 @@ int main(const int argc, char *argv[]) {
     switch (argc) {
         // No arguments provided
         case 1:
-            printf("Red Archive %d.%d\n", REDARCHIVE_VERSION_MAJOR, REDARCHIVE_VERSION_MINOR);
+            printf("Red Archive %d.%d\n", RED_ARCHIVE_VERSION_MAJOR, RED_ARCHIVE_VERSION_MINOR);
             printf("MIT License\n");
             printf("Copyright (c) 2020 Jacob Gelling\n\n");
             printf("  To unpack an archive into a folder:\n");

@@ -1,5 +1,5 @@
-#ifndef REDARCHIVE_CLI_H
-#define REDARCHIVE_CLI_H
+#ifndef RED_ARCHIVE_CLI_H
+#define RED_ARCHIVE_CLI_H
 
 #include <stdlib.h>
 #include <stdio.h>

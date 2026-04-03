@@ -6,7 +6,7 @@ int main(const int argc, char *argv[]) {
         case 1:
             printf("Red Archive %d.%d\n", RED_ARCHIVE_VERSION_MAJOR, RED_ARCHIVE_VERSION_MINOR);
             printf("MIT License\n");
-            printf("Copyright (c) 2020 Jacob Gelling\n\n");
+            printf("Copyright (c) 2020-2026 Jacob Gelling\n\n");
             printf("  To unpack an archive into a folder:\n");
             printf("  %s -u archive folder\n\n", argv[0]);
             printf("  To pack a folder into an archive:\n");

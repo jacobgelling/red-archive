@@ -8,25 +8,25 @@ set(CMAKE_C_EXTENSIONS OFF)
 
 configure_file(${PROJECT_SOURCE_DIR}/include/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/version.h)
 
-add_executable(redarchive)
+add_executable(red-archive)
 
-target_sources(redarchive PRIVATE
+target_sources(red-archive PRIVATE
     ${PROJECT_SOURCE_DIR}/src/cli.c
     ${PROJECT_SOURCE_DIR}/src/archive.c
 )
 
-target_include_directories(redarchive PRIVATE
+target_include_directories(red-archive PRIVATE
     ${PROJECT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
-target_compile_options(redarchive PRIVATE
+target_compile_options(red-archive PRIVATE
     $<$<C_COMPILER_ID:GNU,Clang,AppleClang>:-Wall -Wextra -Wpedantic>
     $<$<C_COMPILER_ID:MSVC>:/W4>
 )
 
 if (WIN32)
-    target_compile_definitions(redarchive PRIVATE _CRT_SECURE_NO_WARNINGS)
+    target_compile_definitions(red-archive PRIVATE _CRT_SECURE_NO_WARNINGS)
     include(FetchContent)
     FetchContent_Declare(
         dirent
@@ -35,9 +35,9 @@ if (WIN32)
         DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
     FetchContent_MakeAvailable(dirent)
-    target_link_libraries(redarchive PRIVATE dirent)
-    target_include_directories(redarchive PRIVATE ${dirent_SOURCE_DIR}/include)
+    target_link_libraries(red-archive PRIVATE dirent)
+    target_include_directories(red-archive PRIVATE ${dirent_SOURCE_DIR}/include)
 endif ()
 
 include(GNUInstallDirs)
-install(TARGETS redarchive RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS red-archive RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

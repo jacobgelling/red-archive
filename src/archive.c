@@ -308,7 +308,7 @@ int unpack(const char *archive_path, const char *folder_path) {
                         for (unsigned int i = 0; i < run_length; i++) {
 
                             // Check offset is valid
-                            if (offset > max_offset || offset >= uncompressed_pointer) {
+                            if (offset > max_offset || (uint_fast32_t)offset >= uncompressed_pointer) {
                                 printf("'%s' has invalid offset during decompression\n", filename);
                                 goto ESCAPE_LOOP;
                             }

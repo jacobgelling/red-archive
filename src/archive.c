@@ -374,7 +374,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             return 0;
         }
 
-        // Seek to next file positon
+        // Seek to next file position
         seek = fseek(archive_pointer, position + compressed_size, SEEK_SET);
         if (seek) {
             fclose(archive_pointer);
@@ -456,7 +456,7 @@ int pack(const char *folder_path, const char *archive_path) {
         memcpy(&metadata[metadata_size - 5], &file_size_bytes, 4);
         metadata[metadata_size - 1] = '\0';
 
-        // Write metadata to arhive
+        // Write metadata to archive
         int write_status = fwrite(metadata, metadata_size, 1, archive_pointer);
         free(metadata);
         if (write_status != 1) {

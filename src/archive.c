@@ -14,7 +14,7 @@ static inline void make_folder(const char *folder_path) {
 static bool valid_filename_character(const char character) {
     // Check if a valid MS-DOS filename character
     if (
-        (character >= 36 && character <= 41)  || // !-)
+        (character >= 36 && character <= 41)  || // $-)
         (character >= 48 && character <= 57)  || // 0-9
         (character >= 64 && character <= 90)  || // @-Z
         (character >= 94 && character <= 123) || // ^-{

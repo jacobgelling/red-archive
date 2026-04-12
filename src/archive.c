@@ -57,7 +57,7 @@ int unpack(const char *archive_path, const char *folder_path) {
     // Unpack all files
     while (1) {
         // Get position in file
-        size_t position = ftell(archive_pointer);
+        long position = ftell(archive_pointer);
 
         // Read filename
         char filename_buffer[FILENAME_SIZE];

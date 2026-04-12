@@ -4,7 +4,7 @@ A tool for packing and unpacking archives from the 1995 game *Big Red Racing*.
 
 ## Usage
 
-The latest binaries for Windows, Debian, and macOS are available on the
+The latest binaries for Windows, Linux, and macOS are available on the
 [GitHub Releases](https://github.com/jacobgelling/red-archive/releases/latest) page.
 
 To unpack an archive `DIRT1.ENV` into a directory `DIRT1`:

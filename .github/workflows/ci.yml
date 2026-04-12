@@ -5,8 +5,19 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+  release:
+    types: [ published ]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: clang-format
+        run: |
+          find src include -name '*.c' -o -name '*.h' | xargs clang-format --dry-run --Werror
+
   build:
     runs-on: ${{ matrix.os }}
 
@@ -17,14 +28,20 @@ jobs:
         build_type: [Release]
         include:
           - os: macos-latest
+            binary_path: red-archive
             c_compiler: clang
+            cmake_flags: -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
           - os: ubuntu-latest
+            binary_path: red-archive
             c_compiler: gcc
+            cmake_flags: ''
           - os: windows-latest
+            binary_path: Release/red-archive.exe
             c_compiler: cl
+            cmake_flags: ''
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set reusable strings
         id: strings
@@ -38,6 +55,7 @@ jobs:
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
+          ${{ matrix.cmake_flags }}
           -S ${{ github.workspace }}
 
       - name: Build
@@ -46,3 +64,9 @@ jobs:
       - name: Test
         working-directory: ${{ steps.strings.outputs.build-output-dir }}
         run: ctest --build-config ${{ matrix.build_type }}
+
+      - name: Release
+        if: github.event_name == 'release'
+        run: gh release upload ${{ github.ref_name }} ${{ steps.strings.outputs.build-output-dir }}/${{ matrix.binary_path }}#red-archive-$(echo ${{ runner.os }} | tr '[:upper:]' '[:lower:]')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

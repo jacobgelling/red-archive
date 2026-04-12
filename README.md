@@ -15,11 +15,6 @@ red-archive -p DIRT1 DIRT1.ENV
 ```
 
 ## Compilation
-Ensure that you checkout the repository's submodules.
-```bash
-git submodule update --init --recursive
-```
-
 Compilation requires a C compiler and CMake.
 
 To generate the build files, execute the following from the root project folder.

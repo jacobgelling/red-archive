@@ -154,7 +154,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             }
 
             // Write uncompressed data to file
-            const int write_status = fwrite(compressed_data, compressed_size, 1, file_pointer);
+            const size_t write_status = fwrite(compressed_data, compressed_size, 1, file_pointer);
             fclose(file_pointer);
             free(compressed_data);
             if (write_status != 1) {
@@ -211,7 +211,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             }
 
             // Write uncompressed data to file
-            const int write_status = fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
+            const size_t write_status = fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
             fclose(file_pointer);
             free(uncompressed_data);
             if (write_status != 1) {
@@ -361,7 +361,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             }
 
             // Copy from memory to file
-            const int write_status = fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
+            const size_t write_status = fwrite(uncompressed_data, uncompressed_size, 1, file_pointer);
             fclose(file_pointer);
             free(uncompressed_data);
             if (write_status != 1) {
@@ -379,7 +379,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         seek = fseek(archive_pointer, position + compressed_size, SEEK_SET);
         if (seek) {
             fclose(archive_pointer);
-            return seek;
+            return (int)seek;
         }
     }
 
@@ -450,7 +450,7 @@ int pack(const char *folder_path, const char *archive_path) {
         }
 
         // Create metadata
-        const int metadata_size = strlen(file_entry->d_name) + 10;
+        const size_t metadata_size = strlen(file_entry->d_name) + 10;
         char *metadata = malloc(metadata_size);
         strcpy(metadata, file_entry->d_name);
         memcpy(&metadata[metadata_size - 9], &file_size_bytes, 4);
@@ -458,7 +458,7 @@ int pack(const char *folder_path, const char *archive_path) {
         metadata[metadata_size - 1] = '\0';
 
         // Write metadata to arhive
-        int write_status = fwrite(metadata, metadata_size, 1, archive_pointer);
+        size_t write_status = fwrite(metadata, metadata_size, 1, archive_pointer);
         free(metadata);
         if (write_status != 1) {
             closedir(folder_pointer);

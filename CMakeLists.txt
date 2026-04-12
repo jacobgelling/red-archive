@@ -30,7 +30,7 @@ if (WIN32)
     include(FetchContent)
     FetchContent_Declare(
         dirent
-        URL      https://github.com/tronkko/dirent/archive/refs/tags/1.26.zip
+        URL https://github.com/tronkko/dirent/archive/refs/tags/1.26.zip
         URL_HASH SHA256=6FFCC318F00BE192ACB611C58AA58EE0CFD96776010680D7F38CF24F3DD8BAF9
         DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )

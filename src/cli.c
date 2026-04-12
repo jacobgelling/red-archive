@@ -7,9 +7,9 @@ int main(const int argc, char *argv[]) {
             printf("Red Archive %s\n", RED_ARCHIVE_VERSION);
             printf("MIT License\n");
             printf("Copyright (c) 2020-2026 Jacob Gelling\n\n");
-            printf("  To unpack an archive into a folder:\n");
+            printf("  To unpack an archive into a directory:\n");
             printf("  %s -u archive folder\n\n", argv[0]);
-            printf("  To pack a folder into an archive:\n");
+            printf("  To pack a directory into an archive:\n");
             printf("  %s -p folder archive\n", argv[0]);
             break;
 

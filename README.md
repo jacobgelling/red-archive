@@ -4,12 +4,12 @@ Program to handle archives from the 1995 title Big Red Racing.
 ## Usage
 The latest binaries for Windows, Debian and macOS are available at [GitHub Releases](https://github.com/jacobgelling/red-archive/releases/latest).
 
-To unpack a given archive `DIRT1.ENV` to folder `DIRT1`, execute the following.
+To unpack an archive `DIRT1.ENV` into a directory `DIRT1`, run the following.
 ```bash
 red-archive -u DIRT1.ENV DIRT1
 ```
 
-To pack a given folder `DIRT1` into archive `DIRT1.ENV`, execute the following.
+To pack a directory `DIRT1` into an archive `DIRT1.ENV`, run the following.
 ```bash
 red-archive -p DIRT1 DIRT1.ENV
 ```
@@ -17,17 +17,17 @@ red-archive -p DIRT1 DIRT1.ENV
 ## Compilation
 Compilation requires a C compiler and CMake.
 
-To generate the build files, execute the following from the root project folder.
+To generate the build files, run the following from the repository root.
 ```bash
 cmake . -B build
 ```
 
-To build the project, execute the following from the root project folder.
+To build the project, run the following from the repository root.
 ```bash
 cmake --build build
 ```
 
-You can find the output binaries in the `bin` folder.
+The output binaries can be found in the `bin` directory.
 
 ## Format
 The Big Red Racing archive format and compression methods are unidentified and therefore undocumented other than what's written here.

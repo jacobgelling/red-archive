@@ -9,10 +9,20 @@ set(CMAKE_C_EXTENSIONS OFF)
 configure_file(${PROJECT_SOURCE_DIR}/include/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/version.h)
 
 add_executable(red-archive)
-target_sources(red-archive PRIVATE ${PROJECT_SOURCE_DIR}/src/cli.c ${PROJECT_SOURCE_DIR}/src/archive.c)
+
+target_sources(red-archive PRIVATE
+    ${PROJECT_SOURCE_DIR}/src/cli.c
+    ${PROJECT_SOURCE_DIR}/src/archive.c
+)
+
 target_include_directories(red-archive PRIVATE
     ${PROJECT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_BINARY_DIR}/include
+)
+
+target_compile_options(red-archive PRIVATE
+    $<$<C_COMPILER_ID:GNU,Clang,AppleClang>:-Wall -Wextra -Wpedantic>
+    $<$<C_COMPILER_ID:MSVC>:/W4>
 )
 
 if (WIN32)
@@ -20,7 +30,7 @@ if (WIN32)
     include(FetchContent)
     FetchContent_Declare(
         dirent
-        URL https://github.com/tronkko/dirent/archive/refs/tags/1.26.zip
+        URL      https://github.com/tronkko/dirent/archive/refs/tags/1.26.zip
         URL_HASH SHA256=6FFCC318F00BE192ACB611C58AA58EE0CFD96776010680D7F38CF24F3DD8BAF9
         DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )

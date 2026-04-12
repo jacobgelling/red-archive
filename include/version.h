@@ -1,6 +1,0 @@
-#ifndef RED_ARCHIVE_VERSION_H
-#define RED_ARCHIVE_VERSION_H
-
-#define RED_ARCHIVE_VERSION "1.0.0"
-
-#endif

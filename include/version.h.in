@@ -1,7 +1,0 @@
-#ifndef RED_ARCHIVE_VERSION_H
-#define RED_ARCHIVE_VERSION_H
-
-#define RED_ARCHIVE_VERSION_MAJOR @red-archive_VERSION_MAJOR@
-#define RED_ARCHIVE_VERSION_MINOR @red-archive_VERSION_MINOR@
-
-#endif

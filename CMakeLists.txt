@@ -1,32 +1,24 @@
-# Set minimum CMake version
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.24)
 
-# Set project name, language and version
 project(red-archive LANGUAGES C VERSION 1.0)
 
-# Create version header file
-configure_file(${PROJECT_SOURCE_DIR}/include/version.h.in ${PROJECT_SOURCE_DIR}/include/version.h)
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
 
-# Windows-only
-if (WIN32)
-    # Include dirent
-    include_directories(${PROJECT_SOURCE_DIR}/third_party/dirent/include)
-
-    # Define _CRT_SECURE_NO_WARNINGS
-    add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-endif (WIN32)
-
-# Include header files
-include_directories(${PROJECT_SOURCE_DIR}/include)
-
-# Set output folder
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
-
-# Set executables to compile
 add_executable(red-archive ${PROJECT_SOURCE_DIR}/src/cli.c ${PROJECT_SOURCE_DIR}/src/archive.c)
 
-# Display all warnings
-set(CMAKE_C_FLAGS "-Wall")
+target_include_directories(red-archive PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
-# Optimise release executable
-set(CMAKE_C_FLAGS_RELEASE "-O3")
+if (WIN32)
+    target_compile_definitions(red-archive PRIVATE _CRT_SECURE_NO_WARNINGS)
+    include(FetchContent)
+    FetchContent_Declare(
+            dirent
+            URL https://github.com/tronkko/dirent/archive/refs/tags/1.26.zip
+            DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+    FetchContent_MakeAvailable(dirent)
+    target_link_libraries(red-archive PRIVATE dirent)
+    target_include_directories(red-archive PRIVATE ${dirent_SOURCE_DIR}/include)
+endif ()

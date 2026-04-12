@@ -1,0 +1,6 @@
+---
+BasedOnStyle: LLVM
+BreakBeforeBraces: Attach
+ColumnLimit: 120
+IndentCaseLabels: true
+IndentWidth: 4

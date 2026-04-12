@@ -3,26 +3,25 @@
 // Set filename size to length of 8.3 filename with null-terminator
 #define FILENAME_SIZE 13
 
-static inline void make_folder(const char *folder_path)  {
-    #ifdef _WIN32
-        _mkdir(folder_path);
-    #else
-        mkdir(folder_path, 0755);
-    #endif
+static inline void make_folder(const char *folder_path) {
+#ifdef _WIN32
+    _mkdir(folder_path);
+#else
+    mkdir(folder_path, 0755);
+#endif
 }
 
 static bool valid_filename_character(const char character) {
     // Check if a valid MS-DOS filename character
-    if (
-        (character >= 36 && character <= 41)  || // !-)
-        (character >= 48 && character <= 57)  || // 0-9
-        (character >= 64 && character <= 90)  || // @-Z
+    if ((character >= 36 && character <= 41) ||  // !-)
+        (character >= 48 && character <= 57) ||  // 0-9
+        (character >= 64 && character <= 90) ||  // @-Z
         (character >= 94 && character <= 123) || // ^-{
-        character == 33  || // !
-        character == 45  || // -
-        character == 46  || // .
-        character == 125 || // }
-        character == 126    // ~
+        character == 33 ||                       // !
+        character == 45 ||                       // -
+        character == 46 ||                       // .
+        character == 125 ||                      // }
+        character == 126                         // ~
     ) {
         return true;
     }
@@ -82,8 +81,9 @@ int unpack(const char *archive_path, const char *folder_path) {
             // Break if null-terminator found
             if (i > 0 && filename_buffer[i] == 0) {
                 break;
-            // Fail if invalid character found or string is unterminated
-            } else if (!valid_filename_character(filename_buffer[i]) || (i == filename_last_i && filename_buffer[i] != 0)) {
+            } else if (!valid_filename_character(filename_buffer[i]) ||
+                       (i == filename_last_i && filename_buffer[i] != 0)) {
+                // Fail if invalid character found or string is unterminated
                 fclose(archive_pointer);
                 fprintf(stderr, "Invalid filename in archive %s\n", archive_path);
                 return 0;
@@ -184,7 +184,7 @@ int unpack(const char *archive_path, const char *folder_path) {
                         uncompressed_data[uncompressed_pointer++] = compressed_data[compressed_pointer];
                     }
                     compressed_pointer++;
-                // Next x bytes are copied without duplication
+                    // Next x bytes are copied without duplication
                 } else {
                     for (unsigned char i = 0; i < flag + 1; i++) {
                         uncompressed_data[uncompressed_pointer++] = compressed_data[compressed_pointer++];
@@ -223,7 +223,7 @@ int unpack(const char *archive_path, const char *folder_path) {
         } else if (compression_level > 1) {
             // Calculate bits used for offset and run length
             const unsigned char offset_bits = 6 - compression_level;
-            if ( offset_bits > 8 ) {
+            if (offset_bits > 8) {
                 free(file_path);
                 free(compressed_data);
                 fprintf(stderr, "Unsupported run and offset length\n");
@@ -231,7 +231,7 @@ int unpack(const char *archive_path, const char *folder_path) {
             }
             const unsigned char run_length_bits = 8 - offset_bits;
             const unsigned int max_run_length = (1 << run_length_bits) + 2;
-            const int max_offset = (1 << ( offset_bits + 8)) - 1;
+            const int max_offset = (1 << (offset_bits + 8)) - 1;
 
             // Create compressed pointer
             uint_fast32_t compressed_pointer = 0;
@@ -260,13 +260,13 @@ int unpack(const char *archive_path, const char *folder_path) {
 
                         // Write byte to circular buffer
                         circular_buffer[circular_offset] = *byte;
-                        if ( circular_offset < max_offset ) {
+                        if (circular_offset < max_offset) {
                             circular_offset++;
                         } else {
                             circular_offset = 0;
                         }
 
-                    // If data is compressed
+                        // If data is compressed
                     } else {
                         // Get offset and run length
                         int offset = -1;
@@ -279,11 +279,11 @@ int unpack(const char *archive_path, const char *folder_path) {
                         compressed_pointer++;
                         unsigned int run_length = 2;
                         for (unsigned char i = 0; i < 8; i++, count++) {
-                            if ( i == offset_bits ) {
+                            if (i == offset_bits) {
                                 count = 0;
                             }
                             if (((compressed_data[compressed_pointer] >> i) & 1) == 1) {
-                                if ( i >= offset_bits ) {
+                                if (i >= offset_bits) {
                                     run_length += 1 << count;
                                 } else {
                                     offset += 1 << count;
@@ -318,7 +318,7 @@ int unpack(const char *archive_path, const char *folder_path) {
 
                             // Write byte to circular buffer
                             circular_buffer[circular_offset] = *byte;
-                            if ( circular_offset < max_offset ) {
+                            if (circular_offset < max_offset) {
                                 circular_offset++;
                             } else {
                                 circular_offset = 0;
@@ -328,7 +328,7 @@ int unpack(const char *archive_path, const char *folder_path) {
                             uncompressed_data[uncompressed_pointer++] = *byte;
 
                             // Calculate next offset
-                            if ( offset < max_offset ) {
+                            if (offset < max_offset) {
                                 offset++;
                             } else {
                                 offset = 0;
@@ -345,8 +345,9 @@ int unpack(const char *archive_path, const char *folder_path) {
             free(circular_buffer);
             free(compressed_data);
 
-            // Check file matches expected size
-            ESCAPE_LOOP:if (uncompressed_pointer != uncompressed_size || compressed_pointer != compressed_size) {
+        // Check file matches expected size
+        ESCAPE_LOOP:
+            if (uncompressed_pointer != uncompressed_size || compressed_pointer != compressed_size) {
                 printf("'%s' does not match expected size\n", filename);
             }
 
@@ -404,7 +405,7 @@ int pack(const char *folder_path, const char *archive_path) {
     }
 
     // For each file in folder
-    struct dirent* file_entry;
+    struct dirent *file_entry;
     while ((file_entry = readdir(folder_pointer))) {
         // Skip . and .. mappings
         if (!strcmp(file_entry->d_name, ".") || !strcmp(file_entry->d_name, "..")) {

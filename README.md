@@ -64,22 +64,22 @@ Type 1 is run-length encoding (RLE).
 
 A flag byte *n* determines what follows:
 
-- If *n* < 128, the next *n* bytes are literals.
+- If *n* < 128, the next *n* + 1 bytes are literals.
 - If *n* ≥ 128, the following single byte is repeated *n* − 125 times.
 
 ### Compression Types 2–6
 
 Types 2–6 use [LZSS](https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Storer%E2%80%93Szymanski)-style
 compression with a sliding window. The compression type *t* determines the bit widths of the offset and run-length
-fields: *t* + 8 bits for the offset and 8 − *t* bits for the run length.
+fields: 14 − *t* bits for the offset and *t* + 2 bits for the run length.
 
 | Type | Offset Bits | Length Bits | Window Size | Min Run | Max Run |
 |------|-------------|-------------|-------------|---------|---------|
-| 2    | 10          | 6           | 1024        | 3       | 66      |
+| 2    | 12          | 4           | 4096        | 3       | 18      |
 | 3    | 11          | 5           | 2048        | 3       | 34      |
-| 4    | 12          | 4           | 4096        | 3       | 18      |
-| 5    | 13          | 3           | 8192        | 3       | 10      |
-| 6    | 14          | 2           | 16384       | 3       | 6       |
+| 4    | 10          | 6           | 1024        | 3       | 66      |
+| 5    | 9           | 7           | 512         | 3       | 130     |
+| 6    | 8           | 8           | 256         | 3       | 258     |
 
 Each flag byte encodes eight chunks. A set bit indicates a compressed chunk and a clear bit indicates an uncompressed
 chunk:
